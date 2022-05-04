@@ -63,6 +63,7 @@
     ]
   },
   "devDependencies": {
+    "@types/react-pdf": "^5.7.1",
     "@types/react-router": "^5.1.18",
     "@types/react-router-dom": "^5.3.3",
     "stylelint": "^14.7.1",

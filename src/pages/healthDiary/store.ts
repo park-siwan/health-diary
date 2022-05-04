@@ -1,4 +1,5 @@
-import { atom, selector, useRecoilState, useRecoilValue } from 'recoil';
+import { atom } from 'recoil';
+// , selector, useRecoilState, useRecoilValue
 import { Inputs } from './type';
 // import add from "date-fns/add";
 import { add, set } from 'date-fns';
@@ -6,6 +7,7 @@ const date = new Date();
 const goToBedTime = set(date, { hours: 23, minutes: 0 });
 const wakeUpTime = add(goToBedTime, { hours: 8, minutes: 30 });
 const reader = new FileReader();
+const FileReaderObj = { reader: null, file: null };
 const defaultValue = {
   createDate: date,
   title: '오늘의 건강일기',
@@ -19,11 +21,11 @@ const defaultValue = {
   sleepTimeEnd: wakeUpTime,
   exercise: '테니스 운동을 2시간 했다.',
   review: '유산소 운동 2시간 하고 밥도 잘 챙겨먹었다.',
-  descImg: { reader: reader, file: null },
-  morningImg: { reader: reader, file: null },
-  lunchImg: { reader: reader, file: null },
-  dinnerImg: { reader: reader, file: null },
-  snackImg: { reader: reader, file: null },
+  descImg: FileReaderObj,
+  morningImg: FileReaderObj,
+  lunchImg: FileReaderObj,
+  dinnerImg: FileReaderObj,
+  snackImg: FileReaderObj,
 };
 export const diaryData = atom<Inputs>({
   key: 'diaryData',

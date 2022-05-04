@@ -60,7 +60,23 @@ export default function HealthDiary() {
     document: <PdfRenderer inputData={recoilData} />,
   });
 
+  const {
+    control,
+    register,
+    handleSubmit,
+    watch,
+    getValues,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm<Inputs>({
+    // defaultValues: {
+    //   // ...defaultValue,
+    //   ...recoilData,
+    // },
+  });
   useEffect(() => {
+    reset({ ...recoilData });
     // 스포카폰트 : https://spoqa.github.io/spoqa-han-sans/
     Font.register({
       family: 'Spoqa',
@@ -82,22 +98,6 @@ export default function HealthDiary() {
     // 500 : https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Medium.ttf
     // 700 : https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Bold.ttf
   }, []);
-
-  const {
-    control,
-    register,
-    handleSubmit,
-    watch,
-    getValues,
-    setValue,
-    formState: { errors },
-  } = useForm<Inputs>({
-    // defaultValues: {
-    //   // ...defaultValue,
-    //   ...recoilData,
-    // },
-  });
-
   const {
     createDate,
     title,
@@ -124,7 +124,11 @@ export default function HealthDiary() {
   const handleMoreClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
     const current = getValues();
-    setRecoilData(current);
+    console.log(
+      '🚀 ~ file: index.tsx ~ line 127 ~ handleMoreClick ~ current',
+      current
+    );
+    setRecoilData((currVal: Inputs) => ({ ...currVal, current }));
   };
   const handleClose = (e: React.MouseEvent<HTMLElement>, target: string) => {
     // console.log(event);descImg.reader
@@ -166,25 +170,26 @@ export default function HealthDiary() {
     name: keyof ImgFileList;
   }): JSX.Element | null => {
     const current = getValues();
-    if (current[name] === null) return null;
-    if (current[name].reader === null) return null;
-    if (current[name]?.reader.result === null) return null;
-    if (current[name].file === null) return null;
-    // if (
-    //   current[name].reader.result instanceof ArrayBuffer ||
-    //   current[name].reader.result === null
-    // )
-    //   return null;
-    const itemData = {
-      img: current[name].reader.result,
-      title: current[name].file.name,
-    };
+    let imgLink = undefined;
+    let imgName = undefined;
+    if (
+      current === null ||
+      current[name] === null ||
+      current[name].reader === null ||
+      current[name].file === null ||
+      current?.[name]?.file?.name === null
+    ) {
+      return null;
+    } else {
+      imgLink = current[name].reader?.result;
+      imgName = current?.[name]?.file?.name;
+    }
     return (
       <ImageListItem>
         <img
-          src={`${itemData.img}`}
-          srcSet={`${itemData.img}`}
-          alt={itemData.title}
+          src={`${imgLink}`}
+          srcSet={`${imgName}`}
+          alt={imgName}
           loading='lazy'
         />
       </ImageListItem>
@@ -404,7 +409,7 @@ export default function HealthDiary() {
 
                 <h3>식단</h3>
                 {/* <img src={descImg.reader.result} alt='1' /> */}
-                <ImgPreview name='morningImg' />
+                {/* <ImgPreview name='morningImg' /> */}
                 <Controller
                   name='morning'
                   control={control}

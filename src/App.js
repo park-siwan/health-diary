@@ -11,9 +11,7 @@ function App() {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} locale={koLocale}>
       <BrowserRouter>
-        <div className='App'>
-          <Pages />
-        </div>
+        <Pages />
       </BrowserRouter>
     </LocalizationProvider>
   );

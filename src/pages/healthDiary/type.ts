@@ -1,14 +1,14 @@
 // type muiTextField = FileList | null;
-interface ImgFile {
-  reader: null | FileReader;
-  file: null | File;
-}
+type ImgFile = {
+  reader: FileReader | null;
+  file: File | null;
+};
 export interface ImgFileList {
-  descImg: ImgFile | null;
-  morningImg: ImgFile | null;
-  lunchImg: ImgFile | null;
-  dinnerImg: ImgFile | null;
-  snackImg: ImgFile | null;
+  descImg: ImgFile;
+  morningImg: ImgFile;
+  lunchImg: ImgFile;
+  dinnerImg: ImgFile;
+  snackImg: ImgFile;
 }
 export interface Inputs extends ImgFileList {
   [x: string]: unknown;
