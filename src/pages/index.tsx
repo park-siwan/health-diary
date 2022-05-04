@@ -7,8 +7,8 @@ export default function Pages() {
   return (
     <>
       <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/healthDiary' element={<HealthDiary />} />
+        {/* <Route path='/' element={<Home />} /> */}
+        <Route path='/' element={<HealthDiary />} />
       </Routes>
     </>
   );
