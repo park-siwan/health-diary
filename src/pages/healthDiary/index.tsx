@@ -14,7 +14,6 @@ import { ImgFile, ImgFileList, Inputs } from './type';
 import { Font, usePDF } from '@react-pdf/renderer';
 import PdfRenderer from './pdf/PdfRenderer';
 import PdfViewer from './pdf/PdfViewer';
-// import Button from '../../components/atoms/Button';
 import {
   Button,
   ButtonGroup,
