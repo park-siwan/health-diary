@@ -1,13 +1,11 @@
 import { FieldValues } from 'react-hook-form';
-interface Props {
-  e: React.ChangeEvent<HTMLInputElement>;
-  field: FieldValues;
-  setValue: Function;
-}
+import { Inputs } from '../type';
+
 const handleImgChange = (
   e: React.ChangeEvent<HTMLInputElement>,
   field: FieldValues,
-  setValue: Function
+  reset: Function,
+  currentRHF: Inputs
 ): void => {
   const { files } = e.target;
   if (files === undefined || files === null) return;
@@ -15,7 +13,7 @@ const handleImgChange = (
   const reader = new FileReader();
   reader.onload = () => {
     const imgFile = { reader, file: files[0] };
-    setValue(field.name, imgFile);
+    reset({ ...currentRHF, [field.name]: imgFile });
   };
   reader.readAsDataURL(files[0]);
 };

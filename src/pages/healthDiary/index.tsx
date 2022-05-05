@@ -10,7 +10,7 @@ import { Box } from '@mui/system';
 import Stack from '@mui/material/Stack';
 import { useRecoilState } from 'recoil';
 import { diaryData } from './store';
-import { ImgFileList, Inputs } from './type';
+import { ImgFile, ImgFileList, Inputs } from './type';
 import { Font, usePDF } from '@react-pdf/renderer';
 import PdfRenderer from './pdf/PdfRenderer';
 import PdfViewer from './pdf/PdfViewer';
@@ -42,8 +42,8 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { styled } from '@mui/material/styles';
 import { PhotoCamera } from '@mui/icons-material';
 
-import ImgLoad from './imgFunc/ImgLoad';
-import handleImgChange from './imgFunc/handleImgChange';
+import ImgStyle from './imgFuncs/ImgStyle';
+import handleImgChange from './imgFuncs/handleImgChange';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 
 import classNames from 'classnames/bind';
@@ -96,41 +96,18 @@ export default function HealthDiary() {
     // 500 : https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Medium.ttf
     // 700 : https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Bold.ttf
   }, []);
-  const {
-    createDate,
-    title,
-    desc,
-    morning,
-    lunch,
-    dinner,
-    snack,
-    nutrients,
-    sleepTimeStart,
-    sleepTimeEnd,
-    exercise,
-    review,
-    descImg,
-    morningImg,
-    lunchImg,
-    dinnerImg,
-    snackImg,
-  } = watch();
-
   //더보기(...) 버튼 전용
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const currentRHF = getValues();
+  const currentRHF: any = getValues();
+
   const handleMoreClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
-
-    console.log(
-      '🚀 ~ file: index.tsx ~ line 127 ~ handleMoreClick ~ current',
-      currentRHF
-    );
-    setRecoilData((currVal: Inputs) => ({ ...currVal, current: currentRHF }));
+    const currentRHF2: any = getValues();
+    // setRecoilData((currVal: Inputs) => ({ ...currVal, current: currentRHF }));
+    setRecoilData(currentRHF2);
   };
   const handleClose = (e: React.MouseEvent<HTMLElement>, target: string) => {
-    // console.log(event);descImg.reader
     if (target === 'createPdf') {
       handleModalOpen();
       //modal창 띄우고 pdf미리보기, pdf다운로드, pdf 새창보기 넣어야함
@@ -143,67 +120,68 @@ export default function HealthDiary() {
   const [modalOpen, setModalOpen] = useState(false);
   const handleModalOpen = () => setModalOpen(true);
   const handleModalClose = () => setModalOpen(false);
-  const style = {
-    borderRadius: '16px',
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '100%',
-    height: '100%',
-    bgcolor: 'white',
-    // border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-    overflowY: 'scroll',
-  };
+
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
 
   //이미지 첨부 관련---
-
-  // console.log(imgPreview);
   const PictureInput = styled('input')({
     display: 'none',
     width: '10%',
   });
 
-  const MealInput = styled(TextField)`
-    width: 90%;
-    margin-right: 16px;
-  `;
-
-  const AddPictureIcon = ({ ariaLabel }: { ariaLabel: string }) => (
-    <Button
-      aria-label={ariaLabel}
-      component='span'
-      variant='outlined'
-      sx={{ height: 64, mr: 2 }}
-    >
-      <AddPhotoAlternateIcon />
-    </Button>
-  );
-  const ImgPreview = ({
+  const ImgFuncs = ({
     name,
+    currentRHF,
   }: {
-    name: keyof ImgFileList;
+    name: ImgFileList;
+    currentRHF: Inputs;
   }): JSX.Element | null => {
-    if (currentRHF[name]?.reader === null) {
+    const AddPictureIcon = ({ ariaLabel }: { ariaLabel: string }) => (
+      <Button
+        aria-label={ariaLabel}
+        component='span'
+        variant='outlined'
+        sx={{ height: 64, mr: 2 }}
+      >
+        <AddPhotoAlternateIcon />
+      </Button>
+    );
+    console.log(currentRHF);
+    const readerFile: ImgFile = currentRHF[name];
+    console.log(
+      '🚀 ~ file: index.tsx ~ line 150 ~ HealthDiary ~ readerFile',
+      readerFile
+    );
+    if (readerFile?.reader === null) {
       return <AddPictureIcon ariaLabel={`upload ${name} picture`} />;
     } else {
-      return <ImgLoad name={name} currentRHF={currentRHF} />;
+      return <ImgStyle readerFile={readerFile} />;
     }
   };
-  console.log(getValues());
-  return (
-    <div className={cx('healthDiary')}>
-      <PdfViewer instance={instance} updateInstance={updateInstance} />
+
+  const ModalPdfPreview = () => {
+    const modalBodyStyle = {
+      borderRadius: '16px',
+      position: 'absolute' as 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: '100%',
+      height: '100%',
+      bgcolor: 'white',
+      // border: '2px solid #000',
+      boxShadow: 24,
+      p: 4,
+      overflowY: 'scroll',
+    };
+    return (
       <Modal
         open={modalOpen}
         onClose={handleModalClose}
         aria-labelledby='pdf-modal-title'
         aria-describedby='pdf-modal-description'
       >
-        <Box sx={style} className='container'>
+        <Box sx={modalBodyStyle} className='container'>
           <Flex fullWidth jc='between' mb={20} className='row'>
             <Flex jc='start'>
               <Typography id='pdf-modal-title' variant='h3' component='h2'>
@@ -221,6 +199,15 @@ export default function HealthDiary() {
           </div>
         </Box>
       </Modal>
+    );
+  };
+
+  console.log(getValues());
+  return (
+    <div className={cx('healthDiary')}>
+      <PdfViewer instance={instance} updateInstance={updateInstance} />
+
+      <ModalPdfPreview />
 
       <div className='container'>
         <div
@@ -383,7 +370,9 @@ export default function HealthDiary() {
                       control={control}
                       render={({ field }) => (
                         <PictureInput
-                          onChange={(e) => handleImgChange(e, field, setValue)}
+                          onChange={(e) =>
+                            handleImgChange(e, field, reset, currentRHF)
+                          }
                           // ref={field.ref}
                           accept='image/*'
                           id='icon-button-file-morning'
@@ -391,7 +380,7 @@ export default function HealthDiary() {
                         />
                       )}
                     />
-                    <ImgPreview name='morningImg' />
+                    <ImgFuncs name='morningImg' currentRHF={currentRHF} />
                   </label>
 
                   <Controller
@@ -415,7 +404,9 @@ export default function HealthDiary() {
                       control={control}
                       render={({ field }) => (
                         <PictureInput
-                          onChange={(e) => handleImgChange(e, field, setValue)}
+                          onChange={(e) =>
+                            handleImgChange(e, field, reset, currentRHF)
+                          }
                           // ref={field.ref}
                           accept='image/*'
                           id='icon-button-file-lunch'
@@ -423,7 +414,7 @@ export default function HealthDiary() {
                         />
                       )}
                     />
-                    <ImgPreview name='lunchImg' />
+                    <ImgFuncs currentRHF={currentRHF} name='lunchImg' />
                   </label>
                   <Controller
                     name='lunch'
@@ -446,7 +437,9 @@ export default function HealthDiary() {
                       control={control}
                       render={({ field }) => (
                         <PictureInput
-                          onChange={(e) => handleImgChange(e, field, setValue)}
+                          onChange={(e) =>
+                            handleImgChange(e, field, reset, currentRHF)
+                          }
                           // ref={field.ref}
                           accept='image/*'
                           id='icon-button-file-dinner'
@@ -454,7 +447,7 @@ export default function HealthDiary() {
                         />
                       )}
                     />
-                    <ImgPreview name='dinnerImg' />
+                    <ImgFuncs currentRHF={currentRHF} name='dinnerImg' />
                   </label>
                   <Controller
                     name='dinner'
@@ -477,7 +470,9 @@ export default function HealthDiary() {
                       control={control}
                       render={({ field }) => (
                         <PictureInput
-                          onChange={(e) => handleImgChange(e, field, setValue)}
+                          onChange={(e) =>
+                            handleImgChange(e, field, reset, currentRHF)
+                          }
                           // ref={field.ref}
                           accept='image/*'
                           id='icon-button-file-snack'
@@ -485,7 +480,7 @@ export default function HealthDiary() {
                         />
                       )}
                     />
-                    <ImgPreview name='snackImg' />
+                    <ImgFuncs currentRHF={currentRHF} name='snackImg' />
                   </label>
                   <Controller
                     name='snack'
