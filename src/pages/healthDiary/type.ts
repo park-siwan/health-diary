@@ -1,6 +1,9 @@
+import { FileReadResult } from 'fs/promises';
+
 export interface ImgFile {
-  reader: FileReader | null;
+  // reader: FileReadResult<ArrayBufferView> | null;
   file: File | null;
+  src?: string;
 }
 export type ImgFileList =
   | 'descImg'

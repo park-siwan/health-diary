@@ -33,7 +33,7 @@ const ImgStyle = ({
   const deleteRef = useRef<HTMLDivElement>(null);
   let imgLink = undefined;
   let imgName = undefined;
-  imgLink = readerFile?.reader?.result;
+  imgLink = readerFile?.src;
   imgName = readerFile?.file?.name;
   if (imgLink === null) return null;
   // if (isAbv(imgLink) === true) return null;

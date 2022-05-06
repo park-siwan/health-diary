@@ -4,24 +4,32 @@ import React, { ReactNode, useEffect, useState } from 'react';
 //pdf viewer
 import { Document as Document2, Page as Page2, pdfjs } from 'react-pdf';
 import useWindowSize from '../../../hooks/useWindowSize';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { diaryData } from '../store';
 import { Button } from '@mui/material';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import Flex from '../../../components/atoms/Flex';
+import { UseFormGetValues } from 'react-hook-form';
+import { Inputs } from '../type';
 // import { setTimeout } from 'timers';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+interface Props {
+  instance: ReactPDF.UsePDFInstance;
+  updateInstance: () => void;
+  getValues: UseFormGetValues<Inputs>;
+}
 export default function PrintDocs({
   instance,
   updateInstance,
-}: {
-  instance: ReactPDF.UsePDFInstance;
-  updateInstance: () => void;
-}) {
-  const inputData = useRecoilValue(diaryData);
-  const { title } = inputData;
+  getValues,
+}: Props) {
+  // console.log(instance);
+  // console.log(instance.error);
+  const [recoilData, setRecoilData] = useRecoilState(diaryData);
+  // const inputData = useRecoilValue(diaryData);
+  const { title } = recoilData;
   const windowSize = useWindowSize();
 
   //pdf viewer
@@ -37,7 +45,7 @@ export default function PrintDocs({
   if (instance.error) return <div>오류: {instance.error}</div>;
   const handleDownload = () => {
     updateInstance();
-    setTimeout(() => {}, 1000);
+    // setTimeout(() => {}, 1000);
     if (instance.url === null) return;
     const link = document.createElement('a');
     link.href = instance.url;
@@ -49,6 +57,11 @@ export default function PrintDocs({
     //   pdf 다운로드
     // </a>;
   };
+  // const handleUpdate = () => {
+  //   const currentRHF = getValues();
+  //   setRecoilData(currentRHF);
+  //   updateInstance();
+  // };
   return (
     <div className='col-sm-4'>
       {/* <div> */}
@@ -73,9 +86,9 @@ export default function PrintDocs({
       </Document2>
 
       <Flex jc='end'>
-        <Button onClick={updateInstance} sx={{ mr: 2 }}>
+        {/* <Button onClick={handleUpdate} sx={{ mr: 2 }}>
           pdf새로고침
-        </Button>
+        </Button> */}
         <Button
           variant='outlined'
           sx={{ marginRight: 2 }}

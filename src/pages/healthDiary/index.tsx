@@ -52,11 +52,6 @@ const cx = classNames.bind(healthDiaryStyle);
 export default function HealthDiary() {
   const [recoilData, setRecoilData] = useRecoilState(diaryData);
 
-  //pdf renderer
-  const [instance, updateInstance] = usePDF({
-    document: <PdfRenderer inputData={recoilData} />,
-  });
-
   const {
     control,
     register,
@@ -69,11 +64,18 @@ export default function HealthDiary() {
     formState: { errors },
   } = useForm<Inputs>({
     defaultValues: {
-      // ...recoilData,
+      ...recoilData,
     },
+  });
+  const currentRHF = getValues();
+  // const PdfRendererConst = ;
+  //pdf renderer
+  const [instance, updateInstance] = usePDF({
+    document: <PdfRenderer inputData={currentRHF} />,
   });
   useEffect(() => {
     reset({ ...recoilData });
+
     //react-pdf 적용 폰트
     // 스포카폰트 : https://spoqa.github.io/spoqa-han-sans/
     Font.register({
@@ -93,19 +95,19 @@ export default function HealthDiary() {
         },
       ],
     });
+    // updateInstance();
     // 500 : https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Medium.ttf
     // 700 : https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Bold.ttf
   }, []);
+
   //더보기(...) 버튼 전용
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const currentRHF: any = getValues();
 
   const handleMoreClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
-    const currentRHF2: any = getValues();
-    // setRecoilData((currVal: Inputs) => ({ ...currVal, current: currentRHF }));
-    setRecoilData(currentRHF2);
+    // const currentRHF2 = getValues();
+    // setRecoilData(currentRHF2);
   };
   const handleClose = (e: React.MouseEvent<HTMLElement>, target: string) => {
     if (target === 'createPdf') {
@@ -148,11 +150,11 @@ export default function HealthDiary() {
     );
     console.log(currentRHF);
     const readerFile: ImgFile = currentRHF[name];
-    console.log(
-      '🚀 ~ file: index.tsx ~ line 150 ~ HealthDiary ~ readerFile',
-      readerFile
-    );
-    if (readerFile?.reader === null) {
+    // console.log(
+    //   '🚀 ~ file: index.tsx ~ line 150 ~ HealthDiary ~ readerFile',
+    //   readerFile
+    // );
+    if (readerFile?.src === undefined) {
       return <AddPictureIcon ariaLabel={`upload ${name} picture`} />;
     } else {
       return (
@@ -197,18 +199,29 @@ export default function HealthDiary() {
             </Flex>
           </Flex>
           <div className='row'>
-            <PdfViewer instance={instance} updateInstance={updateInstance} />
+            <PdfViewer
+              instance={instance}
+              updateInstance={updateInstance}
+              getValues={getValues}
+            />
           </div>
         </Box>
       </Modal>
     );
   };
+  const handleRerender = () => {
+    const currentRHF2 = getValues();
+    setRecoilData(currentRHF2);
+
+    console.log(instance);
+  };
+  useEffect(() => {
+    updateInstance();
+  }, [setRecoilData, updateInstance]);
 
   console.log(getValues());
   return (
     <div className={cx('healthDiary')}>
-      <PdfViewer instance={instance} updateInstance={updateInstance} />
-
       <ModalPdfPreview />
 
       <div className='container'>
@@ -243,7 +256,6 @@ export default function HealthDiary() {
               </Typography>
               <div>
                 <IconButton
-                  // onClick={updateInstance}
                   id='basic-button'
                   aria-controls={open ? 'basic-menu' : undefined}
                   aria-haspopup='true'
@@ -578,9 +590,16 @@ export default function HealthDiary() {
             </form>
             <Flex fullWidth mb={120} />
           </div>
-          {/* <div className='col-sm-4 col-md-6'>
-            <ImgPreview />
-          </div> */}
+          <div className='col-sm-4 col-md-6'>
+            <Button variant='outlined' onClick={handleRerender}>
+              handleRerender
+            </Button>
+            <PdfViewer
+              instance={instance}
+              updateInstance={updateInstance}
+              getValues={getValues}
+            />
+          </div>
         </div>
       </div>
     </div>

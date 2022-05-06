@@ -11,7 +11,7 @@ const handleImgChange = (
   field.onChange(files);
   const reader = new FileReader();
   reader.onload = () => {
-    const imgFile = { reader, file: files[0] };
+    const imgFile = { file: files[0], src: reader.result };
     if (setValue === undefined) return;
     console.log(field.name, imgFile);
     setValue(field.name, imgFile, {

@@ -25,7 +25,18 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { S, primary, gray } from './style';
 import heartIcon from './heartIcon.png';
 import { format, differenceInHours, differenceInMinutes } from 'date-fns';
-function PdfRenderer({ inputData }: { inputData: Inputs }) {
+function PdfRenderer({
+  inputData,
+}: // updateInstance,
+{
+  inputData: Inputs;
+  // updateInstance: Function;
+}) {
+  // const recoilValue = useRecoilValue(diaryData);
+  // console.log(
+  //   '🚀 ~ file: PdfRenderer.tsx ~ line 30 ~ PdfRenderer ~ recoilValue',
+  //   recoilValue
+  // );
   const {
     createDate,
     title,
@@ -39,11 +50,19 @@ function PdfRenderer({ inputData }: { inputData: Inputs }) {
     sleepTimeEnd,
     exercise,
     review,
+    morningImg,
+    lunchImg,
+    dinnerImg,
+    snackImg,
   } = inputData;
-
+  // if (morningImg.reader?.result === null) return null;
   function componentWithChildren<Props>(Component: React.ComponentType<Props>) {
     return Component as React.ComponentType<Props & { children: ReactNode }>;
   }
+  useEffect(() => {}, []);
+
+  // var y = document.createElement('SOURCE');
+  // console.log('🚀 ~ file: PdfRenderer.tsx ~ line 52 ~ PdfRenderer ~ y', y);
   const Document = componentWithChildren(_Document);
   const Page = componentWithChildren(_Page);
 
@@ -54,10 +73,12 @@ function PdfRenderer({ inputData }: { inputData: Inputs }) {
   const sleepTotal = differenceInMinutes(sleepTimeEnd, sleepTimeStart);
   const sleepMin = sleepTotal % 60;
   const sleepHour = Math.floor(sleepTotal / 60);
+  // console.log(morningImg.src);
 
+  // if (morningImg?.reader === null) return null;
   // const sleepTotal =
   return (
-    <Document creator='시완'>
+    <Document creator='health-diary'>
       <Page size='A4' style={{ ...S.font, ...S.outer }}>
         <View style={S.header}>
           {/* 순번 */}
@@ -92,6 +113,11 @@ function PdfRenderer({ inputData }: { inputData: Inputs }) {
               <View style={S.food}>
                 <Text style={S.foodTitle}>아침</Text>
                 <Text style={S.foodDesc}>{morning}</Text>
+                <Image
+                  // src={morningImg.src}
+                  src={`${morningImg.src}`}
+                  style={{ width: 100, height: 100 }}
+                />
               </View>
               <View style={S.food}>
                 <Text style={S.foodTitle}>점심</Text>
