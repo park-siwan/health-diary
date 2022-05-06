@@ -77,6 +77,7 @@ function PdfRenderer({
 
   // if (morningImg?.reader === null) return null;
   // const sleepTotal =
+
   return (
     <Document creator='health-diary'>
       <Page size='A4' style={{ ...S.font, ...S.outer }}>
@@ -116,9 +117,10 @@ function PdfRenderer({
                 <Image
                   // src={morningImg.src}
                   src={`${morningImg.src}`}
-                  style={{ width: 100, height: 100 }}
+                  style={{ width: 163, height: 143.5 }}
                 />
               </View>
+
               <View style={S.food}>
                 <Text style={S.foodTitle}>점심</Text>
                 <Text style={S.foodDesc}>{lunch}</Text>

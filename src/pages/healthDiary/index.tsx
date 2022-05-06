@@ -212,14 +212,38 @@ export default function HealthDiary() {
   const handleRerender = () => {
     const currentRHF2 = getValues();
     setRecoilData(currentRHF2);
-
     console.log(instance);
+  };
+
+  console.log(getValues());
+
+  const downloadOpen = () => {
+    //handleDownload 클릭시 팝업창띄우고  인스턴스 실행후 downloadOpen()해서 최신화된 pdf를 다운받도록해야함
+    if (instance.url === null) return;
+    if (instance.loading) return <div>Loading ...</div>;
+    //다운로드 react useRef 써서 해보기
+    // const link = document.createElement('a');
+    // link.href = instance.url;
+    // link.setAttribute('download', `${recoilData.title}.pdf`);
+    // document.body.appendChild(link);
+    // link.click();
+    // document.body.removeChild(link);
+  };
+
+  const handleDownload = () => {
+    // handleRerender();
+    downloadOpen();
+    // setTimeout(() => {
+    //   downloadOpen();
+    // }, 1000);
+
+    // <a href={instance.url || undefined} download={`${title}.pdf`}>
+    //   pdf 다운로드
+    // </a>;
   };
   useEffect(() => {
     updateInstance();
   }, [setRecoilData, updateInstance]);
-
-  console.log(getValues());
   return (
     <div className={cx('healthDiary')}>
       <ModalPdfPreview />
@@ -593,6 +617,9 @@ export default function HealthDiary() {
           <div className='col-sm-4 col-md-6'>
             <Button variant='outlined' onClick={handleRerender}>
               handleRerender
+            </Button>
+            <Button onClick={handleDownload} variant='contained'>
+              pdf 다운로드 준비
             </Button>
             <PdfViewer
               instance={instance}

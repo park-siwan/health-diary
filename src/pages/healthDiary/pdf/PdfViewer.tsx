@@ -43,9 +43,7 @@ export default function PrintDocs({
   if (instance.loading) return <div>Loading ...</div>;
 
   if (instance.error) return <div>오류: {instance.error}</div>;
-  const handleDownload = () => {
-    updateInstance();
-    // setTimeout(() => {}, 1000);
+  const downloadOpen = () => {
     if (instance.url === null) return;
     const link = document.createElement('a');
     link.href = instance.url;
@@ -53,10 +51,17 @@ export default function PrintDocs({
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+  const handleDownload = () => {
+    const currentVal = getValues();
+    setRecoilData(currentVal);
+    updateInstance();
+    downloadOpen();
     // <a href={instance.url || undefined} download={`${title}.pdf`}>
     //   pdf 다운로드
     // </a>;
   };
+
   // const handleUpdate = () => {
   //   const currentRHF = getValues();
   //   setRecoilData(currentRHF);
@@ -89,16 +94,16 @@ export default function PrintDocs({
         {/* <Button onClick={handleUpdate} sx={{ mr: 2 }}>
           pdf새로고침
         </Button> */}
-        <Button
+        {/* <Button
           variant='outlined'
           sx={{ marginRight: 2 }}
           href={instance.url || undefined}
         >
           pdf 새창으로 보기
-        </Button>
-        <Button onClick={handleDownload} variant='contained'>
+        </Button> */}
+        {/* <Button onClick={handleDownload} variant='contained'>
           pdf 다운로드
-        </Button>
+        </Button> */}
       </Flex>
       {/* <PDFViewer width={'100%'} height={'50%'}>
           <MyDoc />
