@@ -1,5 +1,5 @@
 import Pages from './pages';
-import './app.css';
+import './fontLoad.css';
 import './styles/style.css';
 import { BrowserRouter } from 'react-router-dom';
 
