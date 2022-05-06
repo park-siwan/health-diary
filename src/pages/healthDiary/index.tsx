@@ -65,15 +65,16 @@ export default function HealthDiary() {
     getValues,
     setValue,
     reset,
+    resetField,
     formState: { errors },
   } = useForm<Inputs>({
-    // defaultValues: {
-    //   // ...defaultValue,
-    //   ...recoilData,
-    // },
+    defaultValues: {
+      // ...recoilData,
+    },
   });
   useEffect(() => {
     reset({ ...recoilData });
+    //react-pdf 적용 폰트
     // 스포카폰트 : https://spoqa.github.io/spoqa-han-sans/
     Font.register({
       family: 'Spoqa',
@@ -154,7 +155,9 @@ export default function HealthDiary() {
     if (readerFile?.reader === null) {
       return <AddPictureIcon ariaLabel={`upload ${name} picture`} />;
     } else {
-      return <ImgStyle readerFile={readerFile} />;
+      return (
+        <ImgStyle name={name} readerFile={readerFile} resetField={resetField} />
+      );
     }
   };
 
@@ -369,9 +372,7 @@ export default function HealthDiary() {
                       control={control}
                       render={({ field }) => (
                         <PictureInput
-                          onChange={(e) =>
-                            handleImgChange(e, field, reset, currentRHF)
-                          }
+                          onChange={(e) => handleImgChange(e, field, setValue)}
                           // ref={field.ref}
                           accept='image/*'
                           id='icon-button-file-morning'
@@ -403,9 +404,7 @@ export default function HealthDiary() {
                       control={control}
                       render={({ field }) => (
                         <PictureInput
-                          onChange={(e) =>
-                            handleImgChange(e, field, reset, currentRHF)
-                          }
+                          onChange={(e) => handleImgChange(e, field, setValue)}
                           // ref={field.ref}
                           accept='image/*'
                           id='icon-button-file-lunch'
@@ -413,7 +412,7 @@ export default function HealthDiary() {
                         />
                       )}
                     />
-                    <ImgFuncs currentRHF={currentRHF} name='lunchImg' />
+                    <ImgFuncs name='lunchImg' currentRHF={currentRHF} />
                   </label>
                   <Controller
                     name='lunch'
@@ -436,9 +435,7 @@ export default function HealthDiary() {
                       control={control}
                       render={({ field }) => (
                         <PictureInput
-                          onChange={(e) =>
-                            handleImgChange(e, field, reset, currentRHF)
-                          }
+                          onChange={(e) => handleImgChange(e, field, setValue)}
                           // ref={field.ref}
                           accept='image/*'
                           id='icon-button-file-dinner'
@@ -469,9 +466,7 @@ export default function HealthDiary() {
                       control={control}
                       render={({ field }) => (
                         <PictureInput
-                          onChange={(e) =>
-                            handleImgChange(e, field, reset, currentRHF)
-                          }
+                          onChange={(e) => handleImgChange(e, field, setValue)}
                           // ref={field.ref}
                           accept='image/*'
                           id='icon-button-file-snack'
