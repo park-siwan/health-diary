@@ -28,6 +28,7 @@ import handleImgChange from './imgFuncs/handleImgChange';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import classNames from 'classnames/bind';
 import healthDiaryStyle from './healthDiary.module.scss';
+import Lnb from '../../components/organisms/Lnb';
 const cx = classNames.bind(healthDiaryStyle);
 
 export default function HealthDiary() {
@@ -130,7 +131,7 @@ export default function HealthDiary() {
           <Button
             onClick={handleDownloadHidden}
             variant='contained'
-            color='secondary'
+            color='primary'
             sx={isCreatedPdf ? { display: 'block' } : { display: 'none' }}
           >
             {loading ? '로딩중...' : 'pdf 다운로드'}
@@ -142,6 +143,12 @@ export default function HealthDiary() {
 
   return (
     <div className={cx('healthDiary')}>
+      <Lnb>
+        <Button variant='outlined' onClick={handleRerender}>
+          PDF 생성하기
+        </Button>
+        {PdfDownloadContainer}
+      </Lnb>
       <div className='container'>
         <div
           className='row'
@@ -151,17 +158,13 @@ export default function HealthDiary() {
         >
           <Box
             className='col-sm-4 col-md-6'
-            sx={{ boxShadow: 4 }}
-            // css={css`
-            //   background-color: white;
-            //   box-shadow: 0 1px 4px rgb(0 0 0 / 6%);
-            //   padding: 40px;
-            // `}
+            // sx={{ boxShadow: 4 }}
+            css={css`
+              background-color: white;
+              box-shadow: 0 1px 4px rgb(0 0 0 / 6%);
+              padding: 40px;
+            `}
           >
-            <Button variant='outlined' onClick={handleRerender}>
-              PDF 생성하기
-            </Button>
-            {PdfDownloadContainer}
             <form onSubmit={handleSubmit(onSubmit)}>
               <Stack spacing={2}>
                 {/* <h2>입력</h2> */}

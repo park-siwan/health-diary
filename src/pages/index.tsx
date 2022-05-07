@@ -10,11 +10,12 @@ export default function Pages() {
   return (
     <>
       <Gnb />
+
       <ModalHook />
       <div
         css={css`
           min-height: 100vh;
-          margin-top: 20px;
+          /* margin-top: 20px; */
         `}
       >
         <Routes>

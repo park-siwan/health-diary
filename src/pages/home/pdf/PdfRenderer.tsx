@@ -25,18 +25,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { S, primary, gray } from './style';
 import heartIcon from './heartIcon.png';
 import { format, differenceInHours, differenceInMinutes } from 'date-fns';
-function PdfRenderer({
-  inputData,
-}: // updateInstance,
-{
-  inputData: Inputs;
-  // updateInstance: Function;
-}) {
-  // const recoilValue = useRecoilValue(diaryData);
-  // console.log(
-  //   '🚀 ~ file: PdfRenderer.tsx ~ line 30 ~ PdfRenderer ~ recoilValue',
-  //   recoilValue
-  // );
+function PdfRenderer({ inputData }: { inputData: Inputs }) {
   const {
     createDate,
     title,
@@ -59,10 +48,7 @@ function PdfRenderer({
   function componentWithChildren<Props>(Component: React.ComponentType<Props>) {
     return Component as React.ComponentType<Props & { children: ReactNode }>;
   }
-  useEffect(() => {}, []);
 
-  // var y = document.createElement('SOURCE');
-  // console.log('🚀 ~ file: PdfRenderer.tsx ~ line 52 ~ PdfRenderer ~ y', y);
   const Document = componentWithChildren(_Document);
   const Page = componentWithChildren(_Page);
 
@@ -73,11 +59,6 @@ function PdfRenderer({
   const sleepTotal = differenceInMinutes(sleepTimeEnd, sleepTimeStart);
   const sleepMin = sleepTotal % 60;
   const sleepHour = Math.floor(sleepTotal / 60);
-  // console.log(morningImg.src);
-
-  // if (morningImg?.reader === null) return null;
-  // const sleepTotal =
-
   return (
     <Document creator='health-diary'>
       <Page size='A4' style={{ ...S.font, ...S.outer }}>
