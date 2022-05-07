@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { format } from 'date-fns';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
@@ -11,7 +11,7 @@ import Stack from '@mui/material/Stack';
 import { useRecoilState } from 'recoil';
 import { diaryData } from './store';
 import { ImgFile, ImgFileList, Inputs } from './type';
-import { Font, usePDF } from '@react-pdf/renderer';
+import { Font, PDFDownloadLink, usePDF } from '@react-pdf/renderer';
 import PdfRenderer from './pdf/PdfRenderer';
 import PdfViewer from './pdf/PdfViewer';
 import {
@@ -51,7 +51,10 @@ const cx = classNames.bind(healthDiaryStyle);
 
 export default function HealthDiary() {
   const [recoilData, setRecoilData] = useRecoilState(diaryData);
-
+  const [isLoading, setIsLoading] = useState(true);
+  setTimeout(() => {
+    setIsLoading(false);
+  }, 2000);
   const {
     control,
     register,
@@ -70,52 +73,30 @@ export default function HealthDiary() {
   const currentRHF = getValues();
   // const PdfRendererConst = ;
   //pdf renderer
+
+  useEffect(() => {
+    reset({ ...recoilData });
+  }, []);
+
   const [instance, updateInstance] = usePDF({
     document: <PdfRenderer inputData={currentRHF} />,
   });
-  useEffect(() => {
-    reset({ ...recoilData });
-
-    //react-pdf 적용 폰트
-    // 스포카폰트 : https://spoqa.github.io/spoqa-han-sans/
-    Font.register({
-      family: 'Spoqa',
-      fonts: [
-        {
-          src: 'https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Regular.ttf',
-          fontWeight: 400,
-        },
-        {
-          src: 'https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Medium.ttf',
-          fontWeight: 500,
-        },
-        {
-          src: 'https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Bold.ttf',
-          fontWeight: 700,
-        },
-      ],
-    });
-    // updateInstance();
-    // 500 : https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Medium.ttf
-    // 700 : https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Bold.ttf
-  }, []);
-
   //더보기(...) 버튼 전용
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
   const handleMoreClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
-    // const currentRHF2 = getValues();
-    // setRecoilData(currentRHF2);
   };
-  const handleClose = (e: React.MouseEvent<HTMLElement>, target: string) => {
+  const handleMenuClose = (
+    e: React.MouseEvent<HTMLElement>,
+    target: string
+  ) => {
     if (target === 'createPdf') {
       handleModalOpen();
       //modal창 띄우고 pdf미리보기, pdf다운로드, pdf 새창보기 넣어야함
       updateInstance();
     }
-
     setAnchorEl(null);
   };
   //modal 관련
@@ -199,11 +180,13 @@ export default function HealthDiary() {
             </Flex>
           </Flex>
           <div className='row'>
-            <PdfViewer
-              instance={instance}
-              updateInstance={updateInstance}
-              getValues={getValues}
-            />
+            {isLoading && (
+              <PdfViewer
+                instance={instance}
+                updateInstance={updateInstance}
+                getValues={getValues}
+              />
+            )}
           </div>
         </Box>
       </Modal>
@@ -214,36 +197,16 @@ export default function HealthDiary() {
     setRecoilData(currentRHF2);
     console.log(instance);
   };
+  useEffect(() => {
+    updateInstance(); //rerender
+  }, [setRecoilData, updateInstance]);
 
+  const downloadLink = useRef<HTMLAnchorElement>(null);
+  const handleDownload = () => {
+    updateInstance();
+  };
   console.log(getValues());
 
-  const downloadOpen = () => {
-    //handleDownload 클릭시 팝업창띄우고  인스턴스 실행후 downloadOpen()해서 최신화된 pdf를 다운받도록해야함
-    if (instance.url === null) return;
-    if (instance.loading) return <div>Loading ...</div>;
-    //다운로드 react useRef 써서 해보기
-    // const link = document.createElement('a');
-    // link.href = instance.url;
-    // link.setAttribute('download', `${recoilData.title}.pdf`);
-    // document.body.appendChild(link);
-    // link.click();
-    // document.body.removeChild(link);
-  };
-
-  const handleDownload = () => {
-    // handleRerender();
-    downloadOpen();
-    // setTimeout(() => {
-    //   downloadOpen();
-    // }, 1000);
-
-    // <a href={instance.url || undefined} download={`${title}.pdf`}>
-    //   pdf 다운로드
-    // </a>;
-  };
-  useEffect(() => {
-    updateInstance();
-  }, [setRecoilData, updateInstance]);
   return (
     <div className={cx('healthDiary')}>
       <ModalPdfPreview />
@@ -293,14 +256,14 @@ export default function HealthDiary() {
                   id='basic-menu'
                   anchorEl={anchorEl}
                   open={open}
-                  onClose={handleClose}
+                  onClose={handleMenuClose}
                   MenuListProps={{
                     'aria-labelledby': 'basic-button',
                   }}
                 >
                   <MenuItem
                     // id='create-pdf'
-                    onClick={(e) => handleClose(e, 'createPdf')}
+                    onClick={(e) => handleMenuClose(e, 'createPdf')}
                     sx={{ width: 320, maxWidth: '100%' }}
                   >
                     <ListItemIcon>
@@ -334,6 +297,37 @@ export default function HealthDiary() {
               paddingRight: '40px',
             }}
           >
+            <Button variant='outlined' onClick={handleRerender}>
+              PDF 생성하기
+            </Button>
+            {/* <Button
+              onClick={handleDownload}
+              variant='contained'
+              component='a'
+              ref={downloadLink}
+            >
+              pdf 다운로드
+            </Button> */}
+
+            <PDFDownloadLink
+              className='test'
+              document={<PdfRenderer inputData={currentRHF} />}
+              fileName={`${currentRHF.title}`}
+            >
+              {({ blob, url, loading, error }) => {
+                // updateInstance();
+                return (
+                  <Button
+                    variant='contained'
+                    color='secondary'
+                    sx={{ display: 'none' }}
+                  >
+                    {loading ? '로딩중...' : 'pdf 다운로드'}
+                  </Button>
+                );
+              }}
+            </PDFDownloadLink>
+
             <form onSubmit={handleSubmit(onSubmit)}>
               <Stack spacing={2}>
                 {/* <h2>입력</h2> */}
@@ -615,12 +609,6 @@ export default function HealthDiary() {
             <Flex fullWidth mb={120} />
           </div>
           <div className='col-sm-4 col-md-6'>
-            <Button variant='outlined' onClick={handleRerender}>
-              handleRerender
-            </Button>
-            <Button onClick={handleDownload} variant='contained'>
-              pdf 다운로드 준비
-            </Button>
             <PdfViewer
               instance={instance}
               updateInstance={updateInstance}

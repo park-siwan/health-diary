@@ -29,7 +29,7 @@ const diaryDefaultValue = {
 };
 export const diaryData = atom({
   key: 'diaryData',
-  default: { ...diaryDefaultValue },
+  default: diaryDefaultValue,
 });
 // const diaryDataSelector = selector({
 //   key: 'diaryDataSelector',
