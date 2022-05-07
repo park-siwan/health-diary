@@ -14,37 +14,18 @@ import { ImgFile, ImgFileList, Inputs } from './type';
 import { Font, PDFDownloadLink, usePDF } from '@react-pdf/renderer';
 import PdfRenderer from './pdf/PdfRenderer';
 import PdfViewer from './pdf/PdfViewer';
-import {
-  Button,
-  ButtonGroup,
-  Input,
-  ListItemIcon,
-  ListItemText,
-  Modal,
-  Typography,
-} from '@mui/material';
+import { Button } from '@mui/material';
 import { blueGrey, pink, grey } from '@mui/material/colors';
 import Flex from '../../components/atoms/Flex';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-// import { SimCardDownloadIcon } from '@mui/icons-material/';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import Divider from '@mui/material/Divider';
 import CloseIcon from '@mui/icons-material/Close';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { styled } from '@mui/material/styles';
-import { PhotoCamera } from '@mui/icons-material';
-
 import ImgStyle from './imgFuncs/ImgStyle';
 import handleImgChange from './imgFuncs/handleImgChange';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-
 import classNames from 'classnames/bind';
 import healthDiaryStyle from './healthDiary.module.scss';
 const cx = classNames.bind(healthDiaryStyle);
@@ -81,28 +62,6 @@ export default function HealthDiary() {
   const [instance, updateInstance] = usePDF({
     document: <PdfRenderer inputData={currentRHF} />,
   });
-  //더보기(...) 버튼 전용
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-
-  const handleMoreClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleMenuClose = (
-    e: React.MouseEvent<HTMLElement>,
-    target: string
-  ) => {
-    if (target === 'createPdf') {
-      handleModalOpen();
-      //modal창 띄우고 pdf미리보기, pdf다운로드, pdf 새창보기 넣어야함
-      updateInstance();
-    }
-    setAnchorEl(null);
-  };
-  //modal 관련
-  const [modalOpen, setModalOpen] = useState(false);
-  const handleModalOpen = () => setModalOpen(true);
-  const handleModalClose = () => setModalOpen(false);
 
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
 
@@ -144,190 +103,65 @@ export default function HealthDiary() {
     }
   };
 
-  const ModalPdfPreview = () => {
-    const modalBodyStyle = {
-      borderRadius: '16px',
-      position: 'absolute' as 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      width: '100%',
-      height: '100%',
-      bgcolor: 'white',
-      // border: '2px solid #000',
-      boxShadow: 24,
-      p: 4,
-      overflowY: 'scroll',
-    };
-    return (
-      <Modal
-        open={modalOpen}
-        onClose={handleModalClose}
-        aria-labelledby='pdf-modal-title'
-        aria-describedby='pdf-modal-description'
-      >
-        <Box sx={modalBodyStyle} className='container'>
-          <Flex fullWidth jc='between' mb={20} className='row'>
-            <Flex jc='start'>
-              <Typography id='pdf-modal-title' variant='h3' component='h2'>
-                PDF 미리보기
-              </Typography>
-            </Flex>
-            <Flex jc='end'>
-              <IconButton aria-label='close' onClick={handleModalClose}>
-                <CloseIcon />
-              </IconButton>
-            </Flex>
-          </Flex>
-          <div className='row'>
-            {isLoading && (
-              <PdfViewer
-                instance={instance}
-                updateInstance={updateInstance}
-                getValues={getValues}
-              />
-            )}
-          </div>
-        </Box>
-      </Modal>
-    );
-  };
+  const [isCreatedPdf, setIsCreatedPdf] = useState(false);
   const handleRerender = () => {
     const currentRHF2 = getValues();
     setRecoilData(currentRHF2);
-    console.log(instance);
+    setIsCreatedPdf(true);
   };
   useEffect(() => {
     updateInstance(); //rerender
   }, [setRecoilData, updateInstance]);
 
-  const downloadLink = useRef<HTMLAnchorElement>(null);
-  const handleDownload = () => {
-    updateInstance();
+  const handleDownloadHidden = () => {
+    setIsCreatedPdf(false);
   };
   console.log(getValues());
 
+  const PdfDownloadContainer = (
+    <PDFDownloadLink
+      className='test'
+      document={<PdfRenderer inputData={currentRHF} />}
+      fileName={`${currentRHF.title}`}
+    >
+      {({ blob, url, loading, error }) => {
+        // updateInstance();
+        return (
+          <Button
+            onClick={handleDownloadHidden}
+            variant='contained'
+            color='secondary'
+            sx={isCreatedPdf ? { display: 'block' } : { display: 'none' }}
+          >
+            {loading ? '로딩중...' : 'pdf 다운로드'}
+          </Button>
+        );
+      }}
+    </PDFDownloadLink>
+  );
+
   return (
     <div className={cx('healthDiary')}>
-      <ModalPdfPreview />
-
       <div className='container'>
         <div
           className='row'
           css={css`
-            display: flex;
             justify-content: center;
           `}
         >
-          <div
+          <Box
             className='col-sm-4 col-md-6'
-            css={css`
-              box-shadow: 0 1px 4px rgb(0 0 0 / 12%);
-              z-index: 1;
-            `}
-          >
-            <div
-              css={css`
-                display: flex;
-                justify-content: space-between;
-                width: 100%;
-                margin-top: 20px;
-                margin-bottom: 20px;
-              `}
-            >
-              <IconButton aria-label='menu'>
-                <MenuIcon />
-              </IconButton>
-              <Typography variant='h4' component='h1'>
-                Health Diary
-              </Typography>
-              <div>
-                <IconButton
-                  id='basic-button'
-                  aria-controls={open ? 'basic-menu' : undefined}
-                  aria-haspopup='true'
-                  aria-expanded={open ? 'true' : undefined}
-                  onClick={handleMoreClick}
-                  aria-label='more features'
-                >
-                  <MoreHorizIcon />
-                </IconButton>
-                <Menu
-                  id='basic-menu'
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleMenuClose}
-                  MenuListProps={{
-                    'aria-labelledby': 'basic-button',
-                  }}
-                >
-                  <MenuItem
-                    // id='create-pdf'
-                    onClick={(e) => handleMenuClose(e, 'createPdf')}
-                    sx={{ width: 320, maxWidth: '100%' }}
-                  >
-                    <ListItemIcon>
-                      <PictureAsPdfIcon fontSize='small' />
-                    </ListItemIcon>
-                    <ListItemText>PDF 생성하기</ListItemText>
-                    <Typography variant='body2' color='text.secondary'>
-                      {/* ⌘X */}
-                    </Typography>
-                  </MenuItem>
-                </Menu>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          className='row'
-          css={css`
-            justify-content: center;
-          `}
-        >
-          <div
-            className='col-sm-4 col-md-6'
-            css={css`
-              background-color: white;
-              box-shadow: 0 1px 4px rgb(0 0 0 / 6%);
-            `}
-            style={{
-              paddingTop: '40px',
-              paddingLeft: '40px',
-              paddingRight: '40px',
-            }}
+            sx={{ boxShadow: 4 }}
+            // css={css`
+            //   background-color: white;
+            //   box-shadow: 0 1px 4px rgb(0 0 0 / 6%);
+            //   padding: 40px;
+            // `}
           >
             <Button variant='outlined' onClick={handleRerender}>
               PDF 생성하기
             </Button>
-            {/* <Button
-              onClick={handleDownload}
-              variant='contained'
-              component='a'
-              ref={downloadLink}
-            >
-              pdf 다운로드
-            </Button> */}
-
-            <PDFDownloadLink
-              className='test'
-              document={<PdfRenderer inputData={currentRHF} />}
-              fileName={`${currentRHF.title}`}
-            >
-              {({ blob, url, loading, error }) => {
-                // updateInstance();
-                return (
-                  <Button
-                    variant='contained'
-                    color='secondary'
-                    sx={{ display: 'none' }}
-                  >
-                    {loading ? '로딩중...' : 'pdf 다운로드'}
-                  </Button>
-                );
-              }}
-            </PDFDownloadLink>
-
+            {PdfDownloadContainer}
             <form onSubmit={handleSubmit(onSubmit)}>
               <Stack spacing={2}>
                 {/* <h2>입력</h2> */}
@@ -607,7 +441,7 @@ export default function HealthDiary() {
               </Stack>
             </form>
             <Flex fullWidth mb={120} />
-          </div>
+          </Box>
           <div className='col-sm-4 col-md-6'>
             <PdfViewer
               instance={instance}
