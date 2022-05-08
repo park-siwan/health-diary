@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { format } from 'date-fns';
-import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import {
+  useForm,
+  SubmitHandler,
+  Controller,
+  useFormState,
+} from 'react-hook-form';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import TextField from '@mui/material/TextField';
 
@@ -14,7 +19,7 @@ import { ImgFile, ImgFileList, Inputs } from './type';
 import { Font, PDFDownloadLink, usePDF } from '@react-pdf/renderer';
 import PdfRenderer from './pdf/PdfRenderer';
 import PdfViewer from './pdf/PdfViewer';
-import { Button } from '@mui/material';
+import { Button, Tooltip } from '@mui/material';
 import { blueGrey, pink, grey } from '@mui/material/colors';
 import Flex from '../../components/atoms/Flex';
 /** @jsxImportSource @emotion/react */
@@ -29,6 +34,7 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import classNames from 'classnames/bind';
 import healthDiaryStyle from './healthDiary.module.scss';
 import Lnb from '../../components/organisms/Lnb';
+import NavBar from '../../components/modecules/NavBar';
 const cx = classNames.bind(healthDiaryStyle);
 
 export default function HealthDiary() {
@@ -46,16 +52,15 @@ export default function HealthDiary() {
     setValue,
     reset,
     resetField,
-    formState: { errors },
+
+    formState: { errors, isDirty, touchedFields },
   } = useForm<Inputs>({
     defaultValues: {
       ...recoilData,
     },
   });
+  // const {  } = useFormState();
   const currentRHF = getValues();
-  // const PdfRendererConst = ;
-  //pdf renderer
-
   useEffect(() => {
     reset({ ...recoilData });
   }, []);
@@ -89,12 +94,8 @@ export default function HealthDiary() {
         <AddPhotoAlternateIcon />
       </Button>
     );
-    console.log(currentRHF);
+    // console.log(currentRHF);
     const readerFile: ImgFile = currentRHF[name];
-    // console.log(
-    //   '🚀 ~ file: index.tsx ~ line 150 ~ HealthDiary ~ readerFile',
-    //   readerFile
-    // );
     if (readerFile?.src === undefined) {
       return <AddPictureIcon ariaLabel={`upload ${name} picture`} />;
     } else {
@@ -105,6 +106,7 @@ export default function HealthDiary() {
   };
 
   const [isCreatedPdf, setIsCreatedPdf] = useState(false);
+  // const rerenderRef = useRef<HTMLElement>(null);
   const handleRerender = () => {
     const currentRHF2 = getValues();
     setRecoilData(currentRHF2);
@@ -114,10 +116,9 @@ export default function HealthDiary() {
     updateInstance(); //rerender
   }, [setRecoilData, updateInstance]);
 
-  const handleDownloadHidden = () => {
+  const handleDownloadDisabled = () => {
     setIsCreatedPdf(false);
   };
-  console.log(getValues());
 
   const PdfDownloadContainer = (
     <PDFDownloadLink
@@ -126,30 +127,22 @@ export default function HealthDiary() {
       fileName={`${currentRHF.title}`}
     >
       {({ blob, url, loading, error }) => {
-        // updateInstance();
-        return (
-          <Button
-            onClick={handleDownloadHidden}
-            variant='contained'
-            color='primary'
-            sx={isCreatedPdf ? { display: 'block' } : { display: 'none' }}
-          >
-            {loading ? '로딩중...' : 'pdf 다운로드'}
-          </Button>
-        );
+        // return loading ? '로딩중...' : 'pdf 다운로드';
+        return 'pdf 다운로드';
       }}
     </PDFDownloadLink>
   );
-
+  console.log(isDirty);
+  console.log(touchedFields);
+  // console.log(recoilData);
   return (
     <div className={cx('healthDiary')}>
-      <Lnb>
-        <Button variant='outlined' onClick={handleRerender}>
-          PDF 생성하기
-        </Button>
-        {PdfDownloadContainer}
-      </Lnb>
-      <div className='container'>
+      <div
+        className='container'
+        css={css`
+          margin-top: 20px;
+        `}
+      >
         <div
           className='row'
           css={css`
@@ -175,10 +168,10 @@ export default function HealthDiary() {
                     <DatePicker
                       {...field}
                       label='날짜'
-                      value={field.value}
-                      onChange={(newValue) => {
-                        field.onChange(newValue);
-                      }}
+                      // value={field.value}
+                      // onChange={(newValue) => {
+                      //   field.onChange(newValue);
+                      // }}
                       inputFormat={'yyyy.MM.dd'}
                       mask='____.__.__'
                       renderInput={(params) => (
@@ -190,12 +183,14 @@ export default function HealthDiary() {
                 <Controller
                   name='title'
                   control={control}
+                  rules={{ required: true }}
                   render={({ field }) => (
                     <TextField
                       label='제목'
                       {...field}
                       placeholder='제목을 입력하세요'
                       variant='standard'
+                      error={errors.title ? true : false}
                     />
                   )}
                 />
@@ -443,8 +438,53 @@ export default function HealthDiary() {
                 />
               </Stack>
             </form>
+            <div
+            // css={css`
+            //   position: absolute;
+            //   z-index: 1400;
+            // `}
+            >
+              <div
+                css={css`
+                  display: flex;
+                  justify-content: end;
+                  align-items: center;
+                `}
+              >
+                <Button
+                  variant='outlined'
+                  onClick={handleRerender}
+                  sx={{ mr: 1 }}
+                  type='submit'
+                >
+                  PDF 생성하기
+                  {/* <input type='submit' /> */}
+                </Button>
+                <Tooltip
+                  title={isCreatedPdf ? '' : 'PDF 생성하기를 눌러주세요'}
+                  arrow
+                  placement='top'
+                >
+                  <span>
+                    <Button
+                      onClick={handleDownloadDisabled}
+                      variant='contained'
+                      color='primary'
+                      disabled={!isCreatedPdf}
+                    >
+                      {PdfDownloadContainer}
+                    </Button>
+                  </span>
+                </Tooltip>
+              </div>
+            </div>
             <Flex fullWidth mb={120} />
           </Box>
+          <div
+            css={css`
+              /* position: relative; */
+            `}
+          ></div>
           <div className='col-sm-4 col-md-6'>
             <PdfViewer
               instance={instance}

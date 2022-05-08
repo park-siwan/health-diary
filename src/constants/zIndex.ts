@@ -1,1 +1,1 @@
-export const zIndexList = { nav: 2000 };
+export const zIndexList = { nav: 1400 };

@@ -43,36 +43,9 @@ export default function PrintDocs({
   if (instance.loading) return <div>Loading ...</div>;
 
   if (instance.error) return <div>오류: {instance.error}</div>;
-  const downloadOpen = () => {
-    if (instance.url === null) return;
-    const link = document.createElement('a');
-    link.href = instance.url;
-    link.setAttribute('download', `${title}.pdf`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-  const handleDownload = () => {
-    const currentVal = getValues();
-    setRecoilData(currentVal);
-    updateInstance();
-    downloadOpen();
-    // <a href={instance.url || undefined} download={`${title}.pdf`}>
-    //   pdf 다운로드
-    // </a>;
-  };
 
-  // const handleUpdate = () => {
-  //   const currentRHF = getValues();
-  //   setRecoilData(currentRHF);
-  //   updateInstance();
-  // };
   return (
-    <div className='col-sm-4'>
-      {/* <div> */}
-      {/* <h2>출력</h2> */}
-      {/* <MyDoc /> */}
-
+    <div style={{ position: 'sticky', top: 80 }}>
       <Document2
         loading={'test1'}
         file={instance.url}
@@ -85,29 +58,10 @@ export default function PrintDocs({
         <Page2
           loading={'test1'}
           pageNumber={pageNumber}
-          // width={windowSize.width}
+          width={windowSize.width / 2.6}
           // height={windowSize.height}
         />
       </Document2>
-
-      <Flex jc='end'>
-        {/* <Button onClick={handleUpdate} sx={{ mr: 2 }}>
-          pdf새로고침
-        </Button> */}
-        {/* <Button
-          variant='outlined'
-          sx={{ marginRight: 2 }}
-          href={instance.url || undefined}
-        >
-          pdf 새창으로 보기
-        </Button> */}
-        {/* <Button onClick={handleDownload} variant='contained'>
-          pdf 다운로드
-        </Button> */}
-      </Flex>
-      {/* <PDFViewer width={'100%'} height={'50%'}>
-          <MyDoc />
-        </PDFViewer> */}
     </div>
   );
 }

@@ -46,7 +46,7 @@ export default function NavBar({ gnb, lnb, children, height = '72px' }: Props) {
         <div className='container' css={container}>
           <div className='row' css={row}>
             <div className='col-sm-4'>
-              <div css={navStyle}>{children}</div>
+              <nav css={navStyle}>{children}</nav>
             </div>
           </div>
         </div>
