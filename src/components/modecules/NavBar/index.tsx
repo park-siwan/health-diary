@@ -9,7 +9,7 @@ interface Props {
   children: ReactNode;
   height?: string;
 }
-export default function NavBar({ gnb, lnb, children, height = '72px' }: Props) {
+export default function NavBar({ gnb, lnb, children, height = '45px' }: Props) {
   const header = css`
     display: block;
     position: relative;

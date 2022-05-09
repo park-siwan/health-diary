@@ -7,73 +7,39 @@ import {
   IconButton,
   ListItemIcon,
   ListItemText,
+  Toolbar,
   Typography,
 } from '@mui/material';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { useState } from 'react';
 import NavBar from '../../modecules/NavBar';
-
+import ToggleButtons from '../ToggleButtons';
+import AppBar from '@mui/material/AppBar';
+import { grey } from '@mui/material/colors';
 export default function Gnb() {
-  //더보기(...) 버튼 전용
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-
-  const handleMoreClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleMenuClose = (
-    e: React.MouseEvent<HTMLElement>,
-    target: string
-  ) => {
-    if (target === 'createPdf') {
-    }
-    setAnchorEl(null);
-  };
-
   return (
-    <NavBar gnb>
-      <IconButton aria-label='menu'>
-        <MenuIcon />
-      </IconButton>
-      <Typography variant='h5' component='h1'>
-        Health Diary
-      </Typography>
-      <div>
+    <AppBar sx={{ bgcolor: 'white' }}>
+      <Toolbar variant='dense'>
         <IconButton
-          id='basic-button'
-          aria-controls={open ? 'basic-menu' : undefined}
-          aria-haspopup='true'
-          aria-expanded={open ? 'true' : undefined}
-          onClick={handleMoreClick}
-          aria-label='more features'
+          size='large'
+          edge='start'
+          color='inherit'
+          aria-label='menu'
+          sx={{ mr: 2 }}
         >
-          <MoreHorizIcon />
+          <MenuIcon sx={{ color: grey[600] }} />
         </IconButton>
-        <Menu
-          id='basic-menu'
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleMenuClose}
-          MenuListProps={{
-            'aria-labelledby': 'basic-button',
-          }}
+        <Typography
+          variant='h6'
+          component='div'
+          sx={{ flexGrow: 1, color: grey[800] }}
+          // sx={{  }}
         >
-          <MenuItem
-            // id='create-pdf'
-            onClick={(e) => handleMenuClose(e, 'createPdf')}
-            sx={{ width: 320, maxWidth: '100%' }}
-          >
-            <ListItemIcon>
-              <PictureAsPdfIcon fontSize='small' />
-            </ListItemIcon>
-            <ListItemText>PDF 생성하기</ListItemText>
-            <Typography variant='body2' color='text.secondary'>
-              {/* ⌘X */}
-            </Typography>
-          </MenuItem>
-        </Menu>
-      </div>
-    </NavBar>
+          Health Diary
+        </Typography>
+        <ToggleButtons />
+      </Toolbar>
+    </AppBar>
   );
 }
