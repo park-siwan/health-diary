@@ -1,8 +1,8 @@
 import ReactPDF from '@react-pdf/renderer';
 import React, { ReactNode, useEffect, useState } from 'react';
 
-//pdf viewer
-import { Document as Document2, Page as Page2, pdfjs } from 'react-pdf';
+//pdf diver
+import { Document, Page as Page2, pdfjs } from 'react-pdf';
 import useWindowSize from '../../../hooks/useWindowSize';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { diaryData } from '../store';
@@ -13,7 +13,9 @@ import Flex from '../../../components/atoms/Flex';
 import { UseFormGetValues } from 'react-hook-form';
 import { Inputs } from '../type';
 // import { setTimeout } from 'timers';
-
+import Skeleton from '@mui/material/Skeleton';
+import heartIcon from './heartIcon.png';
+import { S, primary, gray } from './style';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 interface Props {
   instance: ReactPDF.UsePDFInstance;
@@ -25,14 +27,26 @@ export default function PrintDocs({
   updateInstance,
   getValues,
 }: Props) {
+  const [stateAni, setStateAni] = useState({ animation: 'fadeIn' });
+  useEffect(() => {
+    // setTimeout(() => {
+    setStateAni({ animation: '' });
+    // }, 2000);
+    return () => {
+      setStateAni({ animation: 'fadeOut' });
+      // setTimeout(() => {
+      setStateAni({ animation: '' });
+      // }, 2000);
+    };
+  }, [instance]);
   // console.log(instance);
   // console.log(instance.error);
   const [recoilData, setRecoilData] = useRecoilState(diaryData);
   // const inputData = useRecoilValue(diaryData);
   const { title } = recoilData;
   const windowSize = useWindowSize();
-
-  //pdf viewer
+  const fullWidth = windowSize.width / 2.6;
+  //pdf diver
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
 
@@ -40,28 +54,68 @@ export default function PrintDocs({
     setNumPages(numPages);
   }
 
-  if (instance.loading) return <div>Loading ...</div>;
+  const PdfSkeleton = () => {
+    return <div></div>;
+  };
 
   if (instance.error) return <div>오류: {instance.error}</div>;
+  const Doc = () => {
+    return (
+      // <div className={`${stateAni.animation}`} style={stateAni}>
+      <div className='fadeIn'>
+        <Document
+          // className={`fadeIn ${stateAni}`}
+          // loading={'loading..'}
+          loading={<PdfSkeleton />}
+          file={instance.url}
+          onLoadSuccess={onDocumentLoadSuccess}
+          options={{
+            standardFontDataUrl:
+              'https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Regular.ttf',
+          }}
+        >
+          <Page2
+            loading={<PdfSkeleton />}
+            pageNumber={pageNumber}
+            width={500}
+          />
+        </Document>
+      </div>
+    );
+  };
 
   return (
-    <div style={{ position: 'sticky', top: 80 }}>
-      <Document2
-        loading={'test1'}
-        file={instance.url}
-        onLoadSuccess={onDocumentLoadSuccess}
-        options={{
-          standardFontDataUrl:
-            'https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Regular.ttf',
-        }}
+    <div
+      css={css`
+        position: sticky;
+        top: 60px;
+      `}
+    >
+      <div
+        css={css`
+          height: 100%;
+          width: 100%;
+          display: flex;
+          justify-content: start;
+        `}
       >
-        <Page2
-          loading={'test1'}
-          pageNumber={pageNumber}
-          width={windowSize.width / 2.6}
-          // height={windowSize.height}
-        />
-      </Document2>
+        {instance.loading ? (
+          // {true ? (
+          <div
+            css={css`
+              width: 100%;
+            `}
+          >
+            <PdfSkeleton />
+          </div>
+        ) : (
+          <Doc />
+        )}
+      </div>
     </div>
   );
+
+  // return (
+
+  // );
 }

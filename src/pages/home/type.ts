@@ -4,6 +4,8 @@ export interface ImgFile {
   // reader: FileReadResult<ArrayBufferView> | null;
   file: File | null;
   src?: string;
+  buffer?: Buffer;
+  reader?: FileReader;
 }
 export type ImgFileList =
   | 'descImg'

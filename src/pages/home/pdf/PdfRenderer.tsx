@@ -44,6 +44,7 @@ function PdfRenderer({ inputData }: { inputData: Inputs }) {
     dinnerImg,
     snackImg,
   } = inputData;
+
   // if (morningImg.reader?.result === null) return null;
   function componentWithChildren<Props>(Component: React.ComponentType<Props>) {
     return Component as React.ComponentType<Props & { children: ReactNode }>;
@@ -96,9 +97,11 @@ function PdfRenderer({ inputData }: { inputData: Inputs }) {
                 <Text style={S.foodTitle}>아침</Text>
                 <Text style={S.foodDesc}>{morning}</Text>
                 <Image
-                  // src={morningImg.src}
                   src={`${morningImg.src}`}
+                  // src={morningImg.buffer}
+                  // src={{ data: morningImg.buffer, format: 'jpg' }}
                   style={{ width: 163, height: 143.5 }}
+                  // allowDangerousPaths='true'
                 />
               </View>
 

@@ -19,7 +19,7 @@ import { ImgFile, ImgFileList, Inputs } from './type';
 import { Font, PDFDownloadLink, usePDF } from '@react-pdf/renderer';
 import PdfRenderer from './pdf/PdfRenderer';
 import PdfViewer from './pdf/PdfViewer';
-import { Button, Tooltip } from '@mui/material';
+import { Button, ButtonGroup, Skeleton, Tooltip } from '@mui/material';
 import { blueGrey, pink, grey } from '@mui/material/colors';
 import Flex from '../../components/atoms/Flex';
 /** @jsxImportSource @emotion/react */
@@ -35,35 +35,34 @@ import classNames from 'classnames/bind';
 import healthDiaryStyle from './healthDiary.module.scss';
 import Lnb from '../../components/organisms/Lnb';
 import NavBar from '../../components/modecules/NavBar';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import ToggleButtons from '../../components/organisms/ToggleButtons';
 const cx = classNames.bind(healthDiaryStyle);
 
 export default function HealthDiary() {
   const [recoilData, setRecoilData] = useRecoilState(diaryData);
   const [isLoading, setIsLoading] = useState(true);
-  setTimeout(() => {
-    setIsLoading(false);
-  }, 2000);
+  // setTimeout(() => {
+  //   setIsLoading(false);
+  // }, 2000);
   const {
     control,
-    register,
     handleSubmit,
     watch,
     getValues,
     setValue,
     reset,
     resetField,
-
-    formState: { errors, isDirty, touchedFields },
+    register,
+    formState: { errors },
   } = useForm<Inputs>({
     defaultValues: {
       ...recoilData,
     },
   });
   // const {  } = useFormState();
-  const currentRHF = getValues();
-  useEffect(() => {
-    reset({ ...recoilData });
-  }, []);
+  const currentRHF: any = getValues();
 
   const [instance, updateInstance] = usePDF({
     document: <PdfRenderer inputData={currentRHF} />,
@@ -108,7 +107,7 @@ export default function HealthDiary() {
   const [isCreatedPdf, setIsCreatedPdf] = useState(false);
   // const rerenderRef = useRef<HTMLElement>(null);
   const handleRerender = () => {
-    const currentRHF2 = getValues();
+    const currentRHF2: any = getValues();
     setRecoilData(currentRHF2);
     setIsCreatedPdf(true);
   };
@@ -132,11 +131,59 @@ export default function HealthDiary() {
       }}
     </PDFDownloadLink>
   );
-  console.log(isDirty);
-  console.log(touchedFields);
+  // console.log(isDirty);
+  // console.log(touchedFields);
   // console.log(recoilData);
+
+  //인풋변화 pdf 실시간 연동
+  const watchDiff = watch();
+  useEffect(() => {
+    updateInstance();
+  }, [watchDiff]);
+
+  const PdfRealTimeRender = (
+    <Stack
+      flexDirection='row'
+      justifyContent='flex-end'
+      mt={2}
+      alignItems='center'
+    >
+      <ButtonGroup aria-label='create pdf'>
+        <Button
+          variant='contained'
+          // variant='text'
+          onClick={handleRerender}
+          type='submit'
+        >
+          <RefreshIcon />
+        </Button>
+        <Button
+          onClick={handleDownloadDisabled}
+          variant='contained'
+          color='primary'
+          disabled={!isCreatedPdf}
+        >
+          {PdfDownloadContainer}
+        </Button>
+      </ButtonGroup>
+      {/* <Tooltip
+        title={isCreatedPdf ? '' : 'PDF 생성하기를 눌러주세요'}
+        arrow
+        placement='top'
+      >
+        <span>
+          <HelpOutlineIcon />
+        </span>
+      </Tooltip> */}
+    </Stack>
+  );
+
   return (
     <div className={cx('healthDiary')}>
+      <Flex mt={50}></Flex>
+      {/* <Lnb>
+       
+      </Lnb> */}
       <div
         className='container'
         css={css`
@@ -244,7 +291,7 @@ export default function HealthDiary() {
                     />
                     <ImgFuncs name='morningImg' currentRHF={currentRHF} />
                   </label>
-
+                  {/* <input type='file' {...register('morningImg.buffer')} /> */}
                   <Controller
                     name='morning'
                     control={control}
@@ -438,60 +485,20 @@ export default function HealthDiary() {
                 />
               </Stack>
             </form>
-            <div
-            // css={css`
-            //   position: absolute;
-            //   z-index: 1400;
-            // `}
-            >
-              <div
-                css={css`
-                  display: flex;
-                  justify-content: end;
-                  align-items: center;
-                `}
-              >
-                <Button
-                  variant='outlined'
-                  onClick={handleRerender}
-                  sx={{ mr: 1 }}
-                  type='submit'
-                >
-                  PDF 생성하기
-                  {/* <input type='submit' /> */}
-                </Button>
-                <Tooltip
-                  title={isCreatedPdf ? '' : 'PDF 생성하기를 눌러주세요'}
-                  arrow
-                  placement='top'
-                >
-                  <span>
-                    <Button
-                      onClick={handleDownloadDisabled}
-                      variant='contained'
-                      color='primary'
-                      disabled={!isCreatedPdf}
-                    >
-                      {PdfDownloadContainer}
-                    </Button>
-                  </span>
-                </Tooltip>
-              </div>
-            </div>
-            <Flex fullWidth mb={120} />
+            {PdfRealTimeRender}
           </Box>
-          <div
-            css={css`
-              /* position: relative; */
-            `}
-          ></div>
+          {/* <PdfRealTimeRender /> */}
+
           <div className='col-sm-4 col-md-6'>
+            {/* {!isLoading && ( */}
             <PdfViewer
               instance={instance}
               updateInstance={updateInstance}
               getValues={getValues}
             />
+            {/* )} */}
           </div>
+          <Flex fullWidth mb={120} />
         </div>
       </div>
     </div>

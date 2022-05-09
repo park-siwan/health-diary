@@ -7,7 +7,14 @@ const date = new Date();
 const goToBedTime = set(date, { hours: 23, minutes: 0 });
 const wakeUpTime = add(goToBedTime, { hours: 8, minutes: 30 });
 const reader = new FileReader();
-const FileReaderObj: ImgFile = { file: null, src: undefined };
+// const file = new File(0, 'fake.jpg');
+// const buffer = Buffer.from(file).toString('base64');
+const FileReaderObj: ImgFile = {
+  file: null,
+  src: undefined,
+  // buffer: undefined,
+  // reader: undefined,
+};
 const diaryDefaultValue = {
   createDate: date,
   title: '오늘의 건강일기',

@@ -10,8 +10,14 @@ const handleImgChange = (
   if (files === undefined || files === null) return;
   field.onChange(files);
   const reader = new FileReader();
+  console.log('🚀 ~ file: handleImgChange.tsx ~ line 13 ~ reader', reader);
   reader.onload = () => {
-    const imgFile = { file: files[0], src: reader.result };
+    const imgFile = {
+      file: files[0],
+      src: reader.result,
+      buffer: files[0].arrayBuffer,
+      reader: reader,
+    };
     if (setValue === undefined) return;
     console.log(field.name, imgFile);
     setValue(field.name, imgFile, {
