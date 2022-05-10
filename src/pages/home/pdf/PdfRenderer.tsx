@@ -25,6 +25,29 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { S, primary, gray } from './style';
 import heartIcon from './heartIcon.png';
 import { format, differenceInHours, differenceInMinutes } from 'date-fns';
+import transparent from './transparent.png';
+import source1 from '../../../styles/fonts/SpoqaHanSansNeo-Regular.ttf';
+import source2 from '../../../styles/fonts/SpoqaHanSansNeo-Medium.ttf';
+import source3 from '../../../styles/fonts/SpoqaHanSansNeo-Bold.ttf';
+
+Font.register({
+  family: 'Spoqa',
+  fonts: [
+    {
+      src: source1,
+      fontWeight: 400,
+    },
+    {
+      src: source2,
+      fontWeight: 500,
+    },
+    {
+      src: source3,
+      fontWeight: 700,
+    },
+  ],
+});
+
 function PdfRenderer({ inputData }: { inputData: Inputs }) {
   const {
     createDate,
@@ -97,7 +120,7 @@ function PdfRenderer({ inputData }: { inputData: Inputs }) {
                 <Text style={S.foodTitle}>아침</Text>
                 <Text style={S.foodDesc}>{morning}</Text>
                 <Image
-                  src={`${morningImg.src}`}
+                  src={`${morningImg.src || transparent}`}
                   // src={morningImg.buffer}
                   // src={{ data: morningImg.buffer, format: 'jpg' }}
                   style={{ width: 163, height: 143.5 }}

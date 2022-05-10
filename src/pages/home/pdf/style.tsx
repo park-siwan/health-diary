@@ -1,4 +1,8 @@
-import { StyleSheet } from '@react-pdf/renderer';
+// import source1 from '../../../styles/fonts/SpoqaHanSansNeo-Regular.ttf';
+// import source2 from '../../../styles/fonts/SpoqaHanSansNeo-Medium.ttf';
+// import source3 from '../../../styles/fonts/SpoqaHanSansNeo-Bold.ttf';
+import { Font, StyleSheet } from '@react-pdf/renderer';
+
 export const primary = {
   100: '#FAE5E6', //배경
   500: '#E3ACAC', //헤더 글자
@@ -10,6 +14,23 @@ export const gray = {
   300: '#CBC5C5',
   500: '#A69E9E', //내용desc
 };
+// Font.register({
+//   family: 'Spoqa',
+//   fonts: [
+//     {
+//       src: source1,
+//       fontWeight: 400,
+//     },
+//     {
+//       src: source2,
+//       fontWeight: 500,
+//     },
+//     {
+//       src: source3,
+//       fontWeight: 700,
+//     },
+//   ],
+// });
 const fontFamily = 'Spoqa';
 export const S = StyleSheet.create({
   //<Page> 에 S.font 로 전역적용한 폰트

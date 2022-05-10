@@ -27,19 +27,6 @@ export default function PrintDocs({
   updateInstance,
   getValues,
 }: Props) {
-  const [stateAni, setStateAni] = useState({ animation: 'fadeIn' });
-  useEffect(() => {
-    // setTimeout(() => {
-    setStateAni({ animation: '' });
-    // }, 2000);
-    return () => {
-      setStateAni({ animation: 'fadeOut' });
-      // setTimeout(() => {
-      setStateAni({ animation: '' });
-      // }, 2000);
-    };
-  }, [instance]);
-  // console.log(instance);
   // console.log(instance.error);
   const [recoilData, setRecoilData] = useRecoilState(diaryData);
   // const inputData = useRecoilValue(diaryData);

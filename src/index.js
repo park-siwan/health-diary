@@ -1,27 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 // import ReactDOM from 'react-dom';
 import App from './App';
 import { RecoilRoot } from 'recoil';
-import { Font } from '@react-pdf/renderer';
+
 import { createRoot } from 'react-dom/client';
 
-Font.register({
-  family: 'Spoqa',
-  fonts: [
-    {
-      src: 'https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Regular.ttf',
-      fontWeight: 400,
-    },
-    {
-      src: 'https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Medium.ttf',
-      fontWeight: 500,
-    },
-    {
-      src: 'https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Bold.ttf',
-      fontWeight: 700,
-    },
-  ],
-});
 const container = document.getElementById('root');
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
 root.render(

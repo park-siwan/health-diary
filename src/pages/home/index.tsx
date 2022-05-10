@@ -14,7 +14,7 @@ import ko from 'date-fns/locale/ko';
 import { Box } from '@mui/system';
 import Stack from '@mui/material/Stack';
 import { useRecoilState } from 'recoil';
-import { diaryData } from './store';
+import { diaryData, diaryDefaultValue, fontLoading } from './store';
 import { ImgFile, ImgFileList, Inputs } from './type';
 import { Font, PDFDownloadLink, usePDF } from '@react-pdf/renderer';
 import PdfRenderer from './pdf/PdfRenderer';
@@ -38,11 +38,17 @@ import NavBar from '../../components/modecules/NavBar';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import ToggleButtons from '../../components/organisms/ToggleButtons';
+import source1 from '../../styles/fonts/SpoqaHanSansNeo-Regular.ttf';
+import source2 from '../../styles/fonts/SpoqaHanSansNeo-Medium.ttf';
+import source3 from '../../styles/fonts/SpoqaHanSansNeo-Bold.ttf';
+import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
 const cx = classNames.bind(healthDiaryStyle);
 
 export default function HealthDiary() {
   const [recoilData, setRecoilData] = useRecoilState(diaryData);
+  const [isFontLoaded, setIsFontLoaded] = useRecoilState(fontLoading);
   const [isLoading, setIsLoading] = useState(true);
+
   // setTimeout(() => {
   //   setIsLoading(false);
   // }, 2000);
@@ -58,16 +64,42 @@ export default function HealthDiary() {
     formState: { errors },
   } = useForm<Inputs>({
     defaultValues: {
-      ...recoilData,
+      ...diaryDefaultValue,
     },
   });
   // const {  } = useFormState();
-  const currentRHF: any = getValues();
+  const currentRHF = getValues();
 
   const [instance, updateInstance] = usePDF({
     document: <PdfRenderer inputData={currentRHF} />,
   });
-
+  useEffect(() => {
+    Font.register({
+      family: 'Spoqa',
+      fonts: [
+        {
+          src: source1,
+          fontWeight: 400,
+        },
+        {
+          src: source2,
+          fontWeight: 500,
+        },
+        {
+          src: source3,
+          fontWeight: 700,
+        },
+      ],
+    });
+    const test = setTimeout(() => {
+      setIsLoading(false);
+      // setValue('title', diaryDefaultValue.title + '1');
+      setValue('review', '한줄평');
+      // reset({ ...currentRHF });
+      // handleRerender();
+    }, 1000);
+    return () => clearTimeout(test);
+  }, []);
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
 
   //이미지 첨부 관련---
@@ -107,7 +139,7 @@ export default function HealthDiary() {
   const [isCreatedPdf, setIsCreatedPdf] = useState(false);
   // const rerenderRef = useRef<HTMLElement>(null);
   const handleRerender = () => {
-    const currentRHF2: any = getValues();
+    const currentRHF2 = getValues();
     setRecoilData(currentRHF2);
     setIsCreatedPdf(true);
   };
@@ -127,7 +159,7 @@ export default function HealthDiary() {
     >
       {({ blob, url, loading, error }) => {
         // return loading ? '로딩중...' : 'pdf 다운로드';
-        return 'pdf 다운로드';
+        return 'PDF';
       }}
     </PDFDownloadLink>
   );
@@ -139,7 +171,7 @@ export default function HealthDiary() {
   const watchDiff = watch();
   useEffect(() => {
     updateInstance();
-  }, [watchDiff]);
+  }, [watchDiff, updateInstance]);
 
   const PdfRealTimeRender = (
     <Stack
@@ -150,7 +182,7 @@ export default function HealthDiary() {
     >
       <ButtonGroup aria-label='create pdf'>
         <Button
-          variant='contained'
+          variant='outlined'
           // variant='text'
           onClick={handleRerender}
           type='submit'
@@ -159,22 +191,14 @@ export default function HealthDiary() {
         </Button>
         <Button
           onClick={handleDownloadDisabled}
-          variant='contained'
+          variant='outlined'
           color='primary'
           disabled={!isCreatedPdf}
         >
+          <SimCardDownloadIcon />
           {PdfDownloadContainer}
         </Button>
       </ButtonGroup>
-      {/* <Tooltip
-        title={isCreatedPdf ? '' : 'PDF 생성하기를 눌러주세요'}
-        arrow
-        placement='top'
-      >
-        <span>
-          <HelpOutlineIcon />
-        </span>
-      </Tooltip> */}
     </Stack>
   );
 
@@ -488,15 +512,14 @@ export default function HealthDiary() {
             {PdfRealTimeRender}
           </Box>
           {/* <PdfRealTimeRender /> */}
-
           <div className='col-sm-4 col-md-6'>
-            {/* {!isLoading && ( */}
-            <PdfViewer
-              instance={instance}
-              updateInstance={updateInstance}
-              getValues={getValues}
-            />
-            {/* )} */}
+            {!isLoading && (
+              <PdfViewer
+                instance={instance}
+                updateInstance={updateInstance}
+                getValues={getValues}
+              />
+            )}
           </div>
           <Flex fullWidth mb={120} />
         </div>

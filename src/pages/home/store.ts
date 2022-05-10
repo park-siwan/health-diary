@@ -15,7 +15,7 @@ const FileReaderObj: ImgFile = {
   // buffer: undefined,
   // reader: undefined,
 };
-const diaryDefaultValue = {
+export const diaryDefaultValue = {
   createDate: date,
   title: '오늘의 건강일기',
   desc: '아침 수업이 있어서 7시에 일어나 시리얼을 먹고 학교를 갔다.\n\n점심은 2시쯤 집에와서 떡갈비, 스팸, 검은콩, 일미를 차려서 먹었다.\n\n저녁은 8시에 국밥을 먹고 집을 갔다.\n\n매일 학교 갈때 올때 걸어다니며, 오늘은 6시에 테니스 동아리가 있어서 2시간정도 유산소 운동을 했다.',
@@ -37,6 +37,10 @@ const diaryDefaultValue = {
 export const diaryData = atom({
   key: 'diaryData',
   default: diaryDefaultValue,
+});
+export const fontLoading = atom({
+  key: 'fontLoading',
+  default: false,
 });
 // const diaryDataSelector = selector({
 //   key: 'diaryDataSelector',
