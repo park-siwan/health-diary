@@ -24,7 +24,12 @@ import { Inputs } from '../type';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { S, primary, gray } from './style';
 import heartIcon from './heartIcon.png';
-import { format, differenceInHours, differenceInMinutes } from 'date-fns';
+import {
+  format,
+  differenceInHours,
+  differenceInMinutes,
+  isValid,
+} from 'date-fns';
 import transparent from './transparent.png';
 import source1 from '../../../styles/fonts/SpoqaHanSansNeo-Regular.ttf';
 import source2 from '../../../styles/fonts/SpoqaHanSansNeo-Medium.ttf';
@@ -75,14 +80,31 @@ function PdfRenderer({ inputData }: { inputData: Inputs }) {
 
   const Document = componentWithChildren(_Document);
   const Page = componentWithChildren(_Page);
+  type date = string;
+  let formatToDateStr: date = '';
+  let formatToSleepTimeStart: date = '';
+  let formatToSleepTimeEnd: date = '';
+  type dateDiff = number;
+  let sleepTotal: dateDiff = 0;
+  let sleepMin: dateDiff = 0;
+  let sleepHour: dateDiff = 0;
+  if (isValid(createDate)) {
+    formatToDateStr = format(createDate, 'yyyy.MM.dd.E', { locale: ko });
+  }
+  const validSleepStart = isValid(sleepTimeStart);
+  const validSleepEnd = isValid(sleepTimeEnd);
+  if (validSleepStart) {
+    formatToSleepTimeStart = format(sleepTimeStart, 'aaa hh:mm');
+  }
+  if (validSleepEnd) {
+    formatToSleepTimeEnd = format(sleepTimeEnd, 'aaa hh:mm');
+  }
+  if (validSleepStart && validSleepEnd) {
+    sleepTotal = differenceInMinutes(sleepTimeEnd, sleepTimeStart);
+    sleepMin = sleepTotal % 60;
+    sleepHour = Math.floor(sleepTotal / 60);
+  }
 
-  const formatToDate = format(createDate, 'yyyy.MM.dd.E', { locale: ko });
-  const formatToSleepTimeStart = format(sleepTimeStart, 'a hh:mm');
-  const formatToSleepTimeEnd = format(sleepTimeEnd, 'a hh:mm');
-
-  const sleepTotal = differenceInMinutes(sleepTimeEnd, sleepTimeStart);
-  const sleepMin = sleepTotal % 60;
-  const sleepHour = Math.floor(sleepTotal / 60);
   return (
     <Document creator='health-diary'>
       <Page size='A4' style={{ ...S.font, ...S.outer }}>
@@ -109,7 +131,7 @@ function PdfRenderer({ inputData }: { inputData: Inputs }) {
               Date
             </Text>
             <Text style={{ ...S.headerText, fontWeight: 700 }}>
-              {formatToDate}
+              {formatToDateStr}
             </Text>
           </View>
         </View>

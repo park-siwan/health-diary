@@ -42,6 +42,9 @@ import source1 from '../../styles/fonts/SpoqaHanSansNeo-Regular.ttf';
 import source2 from '../../styles/fonts/SpoqaHanSansNeo-Medium.ttf';
 import source3 from '../../styles/fonts/SpoqaHanSansNeo-Bold.ttf';
 import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import enLocale from 'date-fns/locale/en-GB';
 const cx = classNames.bind(healthDiaryStyle);
 
 export default function HealthDiary() {
@@ -438,48 +441,55 @@ export default function HealthDiary() {
                 />
                 {/* 수면시간 : 타임픽커 */}
                 <h3>수면 시간</h3>
-                <div
-                  css={css`
-                    display: flex;
-                  `}
+                <LocalizationProvider
+                  dateAdapter={AdapterDateFns}
+                  locale={enLocale}
                 >
-                  <Controller
-                    name='sleepTimeStart'
-                    control={control}
-                    render={({ field }) => (
-                      <TimePicker
-                        {...field}
-                        label='취침 시간'
-                        inputFormat={'a hh:mm'}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            variant='standard'
-                            sx={{ width: '50%', mr: 4 }}
-                          />
-                        )}
-                      />
-                    )}
-                  />
-                  <Controller
-                    name='sleepTimeEnd'
-                    control={control}
-                    render={({ field }) => (
-                      <TimePicker
-                        {...field}
-                        label='기상 시간'
-                        inputFormat={'a hh:mm'}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            variant='standard'
-                            sx={{ width: '50%' }}
-                          />
-                        )}
-                      />
-                    )}
-                  />
-                </div>
+                  <div
+                    css={css`
+                      display: flex;
+                    `}
+                  >
+                    <Controller
+                      name='sleepTimeStart'
+                      control={control}
+                      render={({ field }) => (
+                        <TimePicker
+                          {...field}
+                          label='취침 시간'
+                          inputFormat={'aaa hh:mm'}
+                          mask='___ __:__'
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              variant='standard'
+                              sx={{ width: '50%', mr: 4 }}
+                            />
+                          )}
+                        />
+                      )}
+                    />
+                    <Controller
+                      name='sleepTimeEnd'
+                      control={control}
+                      render={({ field }) => (
+                        <TimePicker
+                          {...field}
+                          label='기상 시간'
+                          inputFormat={'aaa hh:mm'}
+                          mask='___ __:__'
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              variant='standard'
+                              sx={{ width: '50%' }}
+                            />
+                          )}
+                        />
+                      )}
+                    />
+                  </div>
+                </LocalizationProvider>
                 <h3>운동</h3>
                 {/* 운동기록 : 오토컴플리트(freesolo운동종류 + dialog운동시간입력 요청 ) */}
                 <Controller

@@ -14,9 +14,10 @@ export type ImgFileList =
   | 'dinnerImg'
   | 'snackImg';
 
+export type date = number | Date;
 export interface Inputs {
   [x: string | number | symbol]: any;
-  createDate: Date;
+  createDate: date;
   title: string;
   desc: string;
   morning: string;
@@ -24,8 +25,8 @@ export interface Inputs {
   dinner: string;
   snack: string;
   nutrients: string;
-  sleepTimeStart: Date;
-  sleepTimeEnd: Date;
+  sleepTimeStart: date;
+  sleepTimeEnd: date;
   exercise: string;
   review: string;
   morningImg: ImgFile;
