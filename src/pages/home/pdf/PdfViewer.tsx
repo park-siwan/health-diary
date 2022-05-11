@@ -49,7 +49,12 @@ export default function PrintDocs({
   const Doc = () => {
     return (
       // <div className={`${stateAni.animation}`} style={stateAni}>
-      <div className='fadeIn'>
+      <div
+        className='fadeIn'
+        css={css`
+          box-shadow: 0 0 8px rgb(235 215 215);
+        `}
+      >
         <Document
           // className={`fadeIn ${stateAni}`}
           // loading={'loading..'}
@@ -75,6 +80,7 @@ export default function PrintDocs({
     <div
       css={css`
         position: sticky;
+        width: 100%;
         top: 60px;
       `}
     >

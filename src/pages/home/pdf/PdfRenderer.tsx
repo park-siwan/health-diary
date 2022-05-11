@@ -1,6 +1,6 @@
 import { ReactNode, useEffect } from 'react';
 
-import {
+import ReactPDF, {
   Page as _Page,
   Document as _Document,
   PDFViewer,
@@ -22,19 +22,14 @@ import { useRecoilValue } from 'recoil';
 import { diaryData } from '../store';
 import { Inputs } from '../type';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { S, primary, gray } from './style';
+import { S, primary, gray, FOOD_BOX_SIZE } from './style';
 import heartIcon from './heartIcon.png';
-import {
-  format,
-  differenceInHours,
-  differenceInMinutes,
-  isValid,
-} from 'date-fns';
+import { format, differenceInMinutes, isValid } from 'date-fns';
 import transparent from './transparent.png';
 import source1 from '../../../styles/fonts/SpoqaHanSansNeo-Regular.ttf';
 import source2 from '../../../styles/fonts/SpoqaHanSansNeo-Medium.ttf';
 import source3 from '../../../styles/fonts/SpoqaHanSansNeo-Bold.ttf';
-
+import testImg from './testImg.jpg';
 Font.register({
   family: 'Spoqa',
   fonts: [
@@ -73,13 +68,15 @@ function PdfRenderer({ inputData }: { inputData: Inputs }) {
     snackImg,
   } = inputData;
 
-  // if (morningImg.reader?.result === null) return null;
+  //type 에러 해결용
   function componentWithChildren<Props>(Component: React.ComponentType<Props>) {
     return Component as React.ComponentType<Props & { children: ReactNode }>;
   }
 
   const Document = componentWithChildren(_Document);
   const Page = componentWithChildren(_Page);
+
+  //날씨 데이터 InValid 감지 로직
   type date = string;
   let formatToDateStr: date = '';
   let formatToSleepTimeStart: date = '';
@@ -104,6 +101,20 @@ function PdfRenderer({ inputData }: { inputData: Inputs }) {
     sleepMin = sleepTotal % 60;
     sleepHour = Math.floor(sleepTotal / 60);
   }
+
+  //사진 삽입시 텍스트 스타일 변경
+  // type textLogicType = { color: string };
+  // let morningTextLogic: textLogicType = { color: primary[500] };
+  // let lunchImgLogic: textLogicType;
+  // let dinnerImgLogic: textLogicType;
+  // let snackImgLogic: textLogicType;
+  const isMorningSrcEmpty = morningImg.src === undefined;
+  const isLunchSrcEmpty = lunchImg.src === undefined;
+  const isDinnerSrcEmpty = dinnerImg.src === undefined;
+  const isSnackSrcEmpty = snackImg.src === undefined;
+  // if (isMorningSrcEmpty) {
+  //   morningTextLogic = { color: '#ffffff' };
+  // }
 
   return (
     <Document creator='health-diary'>
@@ -138,29 +149,69 @@ function PdfRenderer({ inputData }: { inputData: Inputs }) {
         <View style={S.inner}>
           <View style={{ flexDirection: 'row' }}>
             <View style={S.foods}>
-              <View style={S.food}>
-                <Text style={S.foodTitle}>아침</Text>
-                <Text style={S.foodDesc}>{morning}</Text>
-                <Image
-                  src={`${morningImg.src || transparent}`}
-                  // src={morningImg.buffer}
-                  // src={{ data: morningImg.buffer, format: 'jpg' }}
-                  style={{ width: 163, height: 143.5 }}
-                  // allowDangerousPaths='true'
-                />
+              <View style={isMorningSrcEmpty ? S.food1 : S.food2}>
+                <Text style={isMorningSrcEmpty ? S.foodTitle1 : S.foodTitle2}>
+                  아침
+                </Text>
+                <Text style={isMorningSrcEmpty ? S.foodDesc1 : S.foodDesc2}>
+                  {morning}
+                </Text>
+                <View style={S.ImgContainer}>
+                  <Image
+                    // src={`${morningImg.src || transparent}`}
+                    src={`${morningImg.src || transparent}`}
+                    style={S.foodImg}
+                  />
+                </View>
               </View>
 
-              <View style={S.food}>
-                <Text style={S.foodTitle}>점심</Text>
-                <Text style={S.foodDesc}>{lunch}</Text>
+              <View style={isLunchSrcEmpty ? S.food1 : S.food2}>
+                <Text style={isLunchSrcEmpty ? S.foodTitle1 : S.foodTitle2}>
+                  점심
+                </Text>
+                <Text style={isLunchSrcEmpty ? S.foodDesc1 : S.foodDesc2}>
+                  {lunch}
+                </Text>
+                <View style={S.ImgContainer}>
+                  <Image
+                    src={`${lunchImg.src || transparent}`}
+                    style={S.foodImg}
+                  />
+                </View>
               </View>
-              <View style={S.food}>
-                <Text style={S.foodTitle}>저녁</Text>
-                <Text style={S.foodDesc}>{dinner}</Text>
+              <View style={isDinnerSrcEmpty ? S.food1 : S.food2}>
+                <Text style={isDinnerSrcEmpty ? S.foodTitle1 : S.foodTitle2}>
+                  저녁
+                </Text>
+                <Text style={isDinnerSrcEmpty ? S.foodDesc1 : S.foodDesc2}>
+                  {dinner}
+                </Text>
+                <View style={S.ImgContainer}>
+                  <Image
+                    src={`${dinnerImg.src || transparent}`}
+                    style={S.foodImg}
+                  />
+                </View>
               </View>
-              <View style={{ ...S.food, borderBottom: 0 }}>
-                <Text style={S.foodTitle}>간식</Text>
-                <Text style={S.foodDesc}>{snack}</Text>
+              <View
+                style={
+                  isSnackSrcEmpty
+                    ? { ...S.food1, borderBottom: 0 }
+                    : { ...S.food2, borderBottom: 0 }
+                }
+              >
+                <Text style={isSnackSrcEmpty ? S.foodTitle1 : S.foodTitle2}>
+                  간식
+                </Text>
+                <Text style={isSnackSrcEmpty ? S.foodDesc1 : S.foodDesc2}>
+                  {snack}
+                </Text>
+                <View style={S.ImgContainer}>
+                  <Image
+                    src={`${snackImg.src || transparent}`}
+                    style={S.foodImg}
+                  />
+                </View>
               </View>
             </View>
             <View style={S.rightBodies}>

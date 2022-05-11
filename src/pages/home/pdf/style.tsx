@@ -1,7 +1,5 @@
 // import source1 from '../../../styles/fonts/SpoqaHanSansNeo-Regular.ttf';
-// import source2 from '../../../styles/fonts/SpoqaHanSansNeo-Medium.ttf';
-// import source3 from '../../../styles/fonts/SpoqaHanSansNeo-Bold.ttf';
-import { Font, StyleSheet } from '@react-pdf/renderer';
+import ReactPDF, { Font, StyleSheet } from '@react-pdf/renderer';
 
 export const primary = {
   100: '#FAE5E6', //배경
@@ -14,23 +12,32 @@ export const gray = {
   300: '#CBC5C5',
   500: '#A69E9E', //내용desc
 };
-// Font.register({
-//   family: 'Spoqa',
-//   fonts: [
-//     {
-//       src: source1,
-//       fontWeight: 400,
-//     },
-//     {
-//       src: source2,
-//       fontWeight: 500,
-//     },
-//     {
-//       src: source3,
-//       fontWeight: 700,
-//     },
-//   ],
-// });
+export const FOOD_BOX_SIZE = 139;
+
+const food: any = {
+  display: 'flex',
+  // justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  width: FOOD_BOX_SIZE,
+  height: FOOD_BOX_SIZE,
+  borderRight: `1px solid ${gray[100]}`,
+  borderBottom: `1px solid ${gray[100]}`,
+  padding: 10,
+};
+const foodTitle: any = {
+  // color: primary[600],
+  fontWeight: 700,
+  fontSize: 16,
+  marginLeft: 10,
+  marginTop: 10,
+  marginBottom: 5,
+};
+const foodDesc: any = {
+  display: 'flex',
+  color: gray[500],
+  fontSize: 14,
+  marginLeft: 10,
+};
 const fontFamily = 'Spoqa';
 export const S = StyleSheet.create({
   //<Page> 에 S.font 로 전역적용한 폰트
@@ -66,25 +73,53 @@ export const S = StyleSheet.create({
     color: primary[700],
   },
   foods: {},
-  food: {
-    width: 163,
-    height: 143.5,
-    borderRight: `1px solid ${gray[100]}`,
-    borderBottom: `1px solid ${gray[100]}`,
-    padding: 10,
+  // food: { ...food },
+  food1: {
+    ...food,
+    justifyContent: 'flex-start',
   },
-  foodTitle: {
+  food2: {
+    ...food,
+    justifyContent: 'flex-end',
+  },
+  foodTitle1: {
+    ...foodTitle,
     color: primary[600],
-    fontWeight: 700,
-    fontSize: 16,
-    marginBottom: 5,
   },
-  foodDesc: { color: gray[500], fontSize: 14 },
+  foodTitle2: {
+    ...foodTitle,
+    color: 'white',
+  },
+  foodDesc1: {
+    ...foodDesc,
+    color: gray[500],
+  },
+  foodDesc2: {
+    ...foodDesc,
+    color: 'white',
+  },
+  ImgContainer: {
+    width: FOOD_BOX_SIZE,
+    height: FOOD_BOX_SIZE,
+    zIndex: 1,
+    position: 'absolute',
+    flexShrink: 0,
+    overflow: 'hidden',
+    // backgroundRepeat: 'no-repeat',
+    // backgroundPosition: 'center center',
+    // backgroundSize: 'contain',
+  },
+  foodImg: {
+    objectFit: 'cover',
+    width: '100%',
+    height: '100%',
+  },
   rightBodies: {
     width: 360,
     height: 574,
     padding: 26,
   },
+
   bottomBox: {
     fontSize: '12px',
     borderTop: `1px solid ${gray[100]}`,

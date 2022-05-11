@@ -28,7 +28,7 @@ const ImgStyle = ({
   resetField,
   name,
 }: Props): JSX.Element | null => {
-  const retryRef = useRef<HTMLSpanElement>(null);
+  const retryRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const deleteRef = useRef<HTMLDivElement>(null);
   let imgLink = undefined;
@@ -39,9 +39,9 @@ const ImgStyle = ({
   // if (isAbv(imgLink) === true) return null;
   // if (imgName === null || ArrayBuffer) return null;
   const imgContainer = css`
-    display: block;
     width: 64px;
     height: 64px;
+    display: block;
     flex-shrink: 0;
     overflow: hidden;
     background-repeat: no-repeat;
@@ -58,7 +58,7 @@ const ImgStyle = ({
     object-fit: cover;
     z-index: 1;
   `;
-  const retryText = css`
+  const retryBox = css`
     width: 64px;
     height: 64px;
     position: absolute;
@@ -148,9 +148,9 @@ const ImgStyle = ({
         onMouseLeave={handleHover}
       >
         {/* 이미지 다시넣기 */}
-        <span ref={retryRef} css={retryText}>
+        <div ref={retryRef} css={retryBox}>
           <AddPhotoAlternateIcon />
-        </span>
+        </div>
         <img
           ref={imgRef}
           css={imgCss}

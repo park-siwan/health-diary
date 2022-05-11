@@ -120,12 +120,13 @@ export default function HealthDiary() {
   }): JSX.Element | null => {
     const AddPictureIcon = ({ ariaLabel }: { ariaLabel: string }) => (
       <Button
+        color='inherit'
         aria-label={ariaLabel}
         component='span'
         variant='outlined'
-        sx={{ height: 64, mr: 2 }}
+        sx={{ height: 64, mr: 2, borderColor: 'grey.300' }}
       >
-        <AddPhotoAlternateIcon />
+        <AddPhotoAlternateIcon sx={{ color: 'grey.300' }} />
       </Button>
     );
     // console.log(currentRHF);
@@ -223,16 +224,16 @@ export default function HealthDiary() {
             justify-content: center;
           `}
         >
-          <Box
-            className='col-sm-4 col-md-6'
-            // sx={{ boxShadow: 4 }}
-            css={css`
-              background-color: white;
-              box-shadow: 0 1px 4px rgb(0 0 0 / 6%);
-              padding: 40px;
-            `}
-          >
-            <form onSubmit={handleSubmit(onSubmit)}>
+          <Box className='col-sm-4 col-md-6'>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              css={css`
+                background-color: white;
+                box-shadow: 0 1px 4px rgb(0 0 0 / 6%);
+                padding: 40px;
+                border-radius: 16px;
+              `}
+            >
               <Stack spacing={2}>
                 {/* <h2>입력</h2> */}
                 <Controller
@@ -457,8 +458,8 @@ export default function HealthDiary() {
                         <TimePicker
                           {...field}
                           label='취침 시간'
-                          inputFormat={'aaa hh:mm'}
-                          mask='___ __:__'
+                          // inputFormat={'hh:mm'}
+                          // mask='__:__'
                           renderInput={(params) => (
                             <TextField
                               {...params}
@@ -476,8 +477,9 @@ export default function HealthDiary() {
                         <TimePicker
                           {...field}
                           label='기상 시간'
-                          inputFormat={'aaa hh:mm'}
-                          mask='___ __:__'
+                          // inputFormat={'hh:mm'}
+                          // inputFormat={'aaa hh:mm'}
+                          // mask='__:__'
                           renderInput={(params) => (
                             <TextField
                               {...params}
