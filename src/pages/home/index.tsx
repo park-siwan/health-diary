@@ -45,6 +45,7 @@ import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import enLocale from 'date-fns/locale/en-GB';
+import { LoadingButton } from '@mui/lab';
 const cx = classNames.bind(healthDiaryStyle);
 
 export default function HealthDiary() {
@@ -145,11 +146,13 @@ export default function HealthDiary() {
   const handleRerender = () => {
     const currentRHF2 = getValues();
     setRecoilData(currentRHF2);
-    setIsCreatedPdf(true);
+    // setIsCreatedPdf(true);
+    setTimeout(() => setIsCreatedPdf(true), 2000);
+    // setIsCreatedPdf(true);
   };
-  useEffect(() => {
-    updateInstance(); //rerender
-  }, [setRecoilData, updateInstance]);
+  // useEffect(() => {
+  //   updateInstance(); //rerender
+  // }, [setRecoilData, updateInstance]);
 
   const handleDownloadDisabled = () => {
     setIsCreatedPdf(false);
@@ -198,6 +201,7 @@ export default function HealthDiary() {
           variant='outlined'
           color='primary'
           disabled={!isCreatedPdf}
+          // loading={!isCreatedPdf}
         >
           <SimCardDownloadIcon />
           {PdfDownloadContainer}

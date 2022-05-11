@@ -158,10 +158,16 @@ function PdfRenderer({ inputData }: { inputData: Inputs }) {
                 </Text>
                 <View style={S.ImgContainer}>
                   <Image
-                    // src={`${morningImg.src || transparent}`}
                     src={`${morningImg.src || transparent}`}
                     style={S.foodImg}
                   />
+                </View>
+                <View style={S.ImgContainer}>
+                  <View
+                    style={
+                      isMorningSrcEmpty ? S.foodTextBack1 : S.foodTextBack2
+                    }
+                  ></View>
                 </View>
               </View>
 
@@ -178,6 +184,11 @@ function PdfRenderer({ inputData }: { inputData: Inputs }) {
                     style={S.foodImg}
                   />
                 </View>
+                <View style={S.ImgContainer}>
+                  <View
+                    style={isLunchSrcEmpty ? S.foodTextBack1 : S.foodTextBack2}
+                  ></View>
+                </View>
               </View>
               <View style={isDinnerSrcEmpty ? S.food1 : S.food2}>
                 <Text style={isDinnerSrcEmpty ? S.foodTitle1 : S.foodTitle2}>
@@ -191,6 +202,11 @@ function PdfRenderer({ inputData }: { inputData: Inputs }) {
                     src={`${dinnerImg.src || transparent}`}
                     style={S.foodImg}
                   />
+                </View>
+                <View style={S.ImgContainer}>
+                  <View
+                    style={isDinnerSrcEmpty ? S.foodTextBack1 : S.foodTextBack2}
+                  ></View>
                 </View>
               </View>
               <View
@@ -211,6 +227,11 @@ function PdfRenderer({ inputData }: { inputData: Inputs }) {
                     src={`${snackImg.src || transparent}`}
                     style={S.foodImg}
                   />
+                </View>
+                <View style={S.ImgContainer}>
+                  <View
+                    style={isSnackSrcEmpty ? S.foodTextBack1 : S.foodTextBack2}
+                  ></View>
                 </View>
               </View>
             </View>

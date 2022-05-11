@@ -1,4 +1,5 @@
 // import source1 from '../../../styles/fonts/SpoqaHanSansNeo-Regular.ttf';
+import { grey } from '@mui/material/colors';
 import ReactPDF, { Font, StyleSheet } from '@react-pdf/renderer';
 
 export const primary = {
@@ -37,6 +38,17 @@ const foodDesc: any = {
   color: gray[500],
   fontSize: 14,
   marginLeft: 10,
+};
+const foodTextBack: any = {
+  position: 'absolute',
+  top: '69.5px',
+  justifyContent: 'flex-end',
+  alignItems: 'flex-start',
+  // zIndex: 2,
+  opacity: 0,
+  backgroundColor: grey[900],
+  width: FOOD_BOX_SIZE,
+  minHeight: FOOD_BOX_SIZE / 2,
 };
 const fontFamily = 'Spoqa';
 export const S = StyleSheet.create({
@@ -97,6 +109,13 @@ export const S = StyleSheet.create({
   foodDesc2: {
     ...foodDesc,
     color: 'white',
+  },
+  foodTextBack1: {
+    ...foodTextBack,
+  },
+  foodTextBack2: {
+    ...foodTextBack,
+    opacity: 0.5,
   },
   ImgContainer: {
     width: FOOD_BOX_SIZE,
