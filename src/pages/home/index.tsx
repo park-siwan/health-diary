@@ -111,10 +111,10 @@ export default function HealthDiary() {
     sleepTimeEnd,
     exercise,
     review,
-    morningImg,
-    lunchImg,
-    dinnerImg,
-    snackImg,
+    // morningImg,
+    // lunchImg,
+    // dinnerImg,
+    // snackImg,
   } = watch();
   // const watchDiff = watch();
   useEffect(() => {
@@ -132,10 +132,10 @@ export default function HealthDiary() {
     sleepTimeEnd,
     exercise,
     review,
-    morningImg,
-    lunchImg,
-    dinnerImg,
-    snackImg,
+    // morningImg,
+    // lunchImg,
+    // dinnerImg,
+    // snackImg,
     // setRecoilData,
     // currentRHF,
   ]);
