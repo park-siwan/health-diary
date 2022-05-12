@@ -149,90 +149,22 @@ function PdfRenderer({ inputData }: { inputData: Inputs }) {
         <View style={S.inner}>
           <View style={{ flexDirection: 'row' }}>
             <View style={S.foods}>
-              <View style={isMorningSrcEmpty ? S.food1 : S.food2}>
-                <Text style={isMorningSrcEmpty ? S.foodTitle1 : S.foodTitle2}>
-                  아침
-                </Text>
-                <Text style={isMorningSrcEmpty ? S.foodDesc1 : S.foodDesc2}>
-                  {morning}
-                </Text>
-                <View style={S.ImgContainer}>
-                  <Image
-                    src={`${morningImg.src || transparent}`}
-                    style={S.foodImg}
-                  />
-                </View>
-                <View style={S.ImgContainer}>
-                  <View
-                    style={
-                      isMorningSrcEmpty ? S.foodTextBack1 : S.foodTextBack2
-                    }
-                  ></View>
-                </View>
+              <View style={S.food1}>
+                <Text style={S.foodTitle1}>아침</Text>
+                <Text style={S.foodDesc1}>{morning}</Text>
               </View>
 
-              <View style={isLunchSrcEmpty ? S.food1 : S.food2}>
-                <Text style={isLunchSrcEmpty ? S.foodTitle1 : S.foodTitle2}>
-                  점심
-                </Text>
-                <Text style={isLunchSrcEmpty ? S.foodDesc1 : S.foodDesc2}>
-                  {lunch}
-                </Text>
-                <View style={S.ImgContainer}>
-                  <Image
-                    src={`${lunchImg.src || transparent}`}
-                    style={S.foodImg}
-                  />
-                </View>
-                <View style={S.ImgContainer}>
-                  <View
-                    style={isLunchSrcEmpty ? S.foodTextBack1 : S.foodTextBack2}
-                  ></View>
-                </View>
+              <View style={S.food1}>
+                <Text style={S.foodTitle1}>점심</Text>
+                <Text style={S.foodDesc1}>{lunch}</Text>
               </View>
-              <View style={isDinnerSrcEmpty ? S.food1 : S.food2}>
-                <Text style={isDinnerSrcEmpty ? S.foodTitle1 : S.foodTitle2}>
-                  저녁
-                </Text>
-                <Text style={isDinnerSrcEmpty ? S.foodDesc1 : S.foodDesc2}>
-                  {dinner}
-                </Text>
-                <View style={S.ImgContainer}>
-                  <Image
-                    src={`${dinnerImg.src || transparent}`}
-                    style={S.foodImg}
-                  />
-                </View>
-                <View style={S.ImgContainer}>
-                  <View
-                    style={isDinnerSrcEmpty ? S.foodTextBack1 : S.foodTextBack2}
-                  ></View>
-                </View>
+              <View style={S.food1}>
+                <Text style={S.foodTitle1}>저녁</Text>
+                <Text style={S.foodDesc1}>{dinner}</Text>
               </View>
-              <View
-                style={
-                  isSnackSrcEmpty
-                    ? { ...S.food1, borderBottom: 0 }
-                    : { ...S.food2, borderBottom: 0 }
-                }
-              >
-                <Text style={isSnackSrcEmpty ? S.foodTitle1 : S.foodTitle2}>
-                  간식
-                </Text>
-                <Text style={isSnackSrcEmpty ? S.foodDesc1 : S.foodDesc2}>
-                  {snack}
-                </Text>
-                <View style={S.ImgContainer}>
-                  <Image
-                    src={`${snackImg.src || transparent}`}
-                    style={S.foodImg}
-                  />
-                </View>
-                <View style={S.ImgContainer}>
-                  <View
-                    style={isSnackSrcEmpty ? S.foodTextBack1 : S.foodTextBack2}
-                  ></View>
-                </View>
+              <View style={{ ...S.food1, borderBottom: 0 }}>
+                <Text style={S.foodTitle1}>간식</Text>
+                <Text style={S.foodDesc1}>{snack}</Text>
               </View>
             </View>
             <View style={S.rightBodies}>
