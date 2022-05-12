@@ -30,6 +30,7 @@ import source1 from '../../../styles/fonts/SpoqaHanSansNeo-Regular.ttf';
 import source2 from '../../../styles/fonts/SpoqaHanSansNeo-Medium.ttf';
 import source3 from '../../../styles/fonts/SpoqaHanSansNeo-Bold.ttf';
 import testImg from './testImg.jpg';
+
 Font.register({
   family: 'Spoqa',
   fonts: [
@@ -101,20 +102,6 @@ function PdfRenderer({ inputData }: { inputData: Inputs }) {
     sleepMin = sleepTotal % 60;
     sleepHour = Math.floor(sleepTotal / 60);
   }
-
-  //사진 삽입시 텍스트 스타일 변경
-  // type textLogicType = { color: string };
-  // let morningTextLogic: textLogicType = { color: primary[500] };
-  // let lunchImgLogic: textLogicType;
-  // let dinnerImgLogic: textLogicType;
-  // let snackImgLogic: textLogicType;
-  const isMorningSrcEmpty = morningImg.src === undefined;
-  const isLunchSrcEmpty = lunchImg.src === undefined;
-  const isDinnerSrcEmpty = dinnerImg.src === undefined;
-  const isSnackSrcEmpty = snackImg.src === undefined;
-  // if (isMorningSrcEmpty) {
-  //   morningTextLogic = { color: '#ffffff' };
-  // }
 
   return (
     <Document creator='health-diary'>

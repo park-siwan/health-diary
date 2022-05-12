@@ -30,32 +30,22 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { styled } from '@mui/material/styles';
 import ImgStyle from './imgFuncs/ImgStyle';
 import handleImgChange from './imgFuncs/handleImgChange';
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+
 import classNames from 'classnames/bind';
 import healthDiaryStyle from './healthDiary.module.scss';
-import Lnb from '../../components/organisms/Lnb';
-import NavBar from '../../components/modecules/NavBar';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import ToggleButtons from '../../components/organisms/ToggleButtons';
-import source1 from '../../styles/fonts/SpoqaHanSansNeo-Regular.ttf';
-import source2 from '../../styles/fonts/SpoqaHanSansNeo-Medium.ttf';
-import source3 from '../../styles/fonts/SpoqaHanSansNeo-Bold.ttf';
+
 import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import enLocale from 'date-fns/locale/en-GB';
-import { LoadingButton } from '@mui/lab';
+import ImgFuncs from './imgFuncs';
+import Preview from './Preview';
+
 const cx = classNames.bind(healthDiaryStyle);
 
 export default function HealthDiary() {
   const [recoilData, setRecoilData] = useRecoilState(diaryData);
-  const [isFontLoaded, setIsFontLoaded] = useRecoilState(fontLoading);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // setTimeout(() => {
-  //   setIsLoading(false);
-  // }, 2000);
   const {
     control,
     handleSubmit,
@@ -77,33 +67,7 @@ export default function HealthDiary() {
   const [instance, updateInstance] = usePDF({
     document: <PdfRenderer inputData={currentRHF} />,
   });
-  useEffect(() => {
-    Font.register({
-      family: 'Spoqa',
-      fonts: [
-        {
-          src: source1,
-          fontWeight: 400,
-        },
-        {
-          src: source2,
-          fontWeight: 500,
-        },
-        {
-          src: source3,
-          fontWeight: 700,
-        },
-      ],
-    });
-    const test = setTimeout(() => {
-      setIsLoading(false);
-      // setValue('title', diaryDefaultValue.title + '1');
-      setValue('review', '한줄평');
-      // reset({ ...currentRHF });
-      // handleRerender();
-    }, 1000);
-    return () => clearTimeout(test);
-  }, []);
+
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
 
   //이미지 첨부 관련---
@@ -112,52 +76,16 @@ export default function HealthDiary() {
     width: '10%',
   });
 
-  const ImgFuncs = ({
-    name,
-    currentRHF,
-  }: {
-    name: ImgFileList;
-    currentRHF: Inputs;
-  }): JSX.Element | null => {
-    const AddPictureIcon = ({ ariaLabel }: { ariaLabel: string }) => (
-      <Button
-        color='inherit'
-        aria-label={ariaLabel}
-        component='span'
-        variant='outlined'
-        sx={{ height: 64, mr: 2, borderColor: 'grey.300' }}
-      >
-        <AddPhotoAlternateIcon sx={{ color: 'grey.300' }} />
-      </Button>
-    );
-    // console.log(currentRHF);
-    const readerFile: ImgFile = currentRHF[name];
-    if (readerFile?.src === undefined) {
-      return <AddPictureIcon ariaLabel={`upload ${name} picture`} />;
-    } else {
-      return (
-        <ImgStyle name={name} readerFile={readerFile} resetField={resetField} />
-      );
-    }
-  };
-
   const [isCreatedPdf, setIsCreatedPdf] = useState(false);
-  // const rerenderRef = useRef<HTMLElement>(null);
   const handleRerender = () => {
     const currentRHF2 = getValues();
     setRecoilData(currentRHF2);
-    // setIsCreatedPdf(true);
-    setTimeout(() => setIsCreatedPdf(true), 2000);
-    // setIsCreatedPdf(true);
+    setIsCreatedPdf(true);
+    updateInstance();
   };
-  // useEffect(() => {
-  //   updateInstance(); //rerender
-  // }, [setRecoilData, updateInstance]);
-
   const handleDownloadDisabled = () => {
     setIsCreatedPdf(false);
   };
-
   const PdfDownloadContainer = (
     <PDFDownloadLink
       className='test'
@@ -165,20 +93,52 @@ export default function HealthDiary() {
       fileName={`${currentRHF.title}`}
     >
       {({ blob, url, loading, error }) => {
-        // return loading ? '로딩중...' : 'pdf 다운로드';
-        return 'PDF';
+        return loading ? 'PDF 로딩중...' : 'PDF 다운로드';
+        // return 'PDF';
       }}
     </PDFDownloadLink>
   );
-  // console.log(isDirty);
-  // console.log(touchedFields);
-  // console.log(recoilData);
-
-  //인풋변화 pdf 실시간 연동
-  const watchDiff = watch();
+  const {
+    createDate,
+    title,
+    desc,
+    morning,
+    lunch,
+    dinner,
+    snack,
+    nutrients,
+    sleepTimeStart,
+    sleepTimeEnd,
+    exercise,
+    review,
+    morningImg,
+    lunchImg,
+    dinnerImg,
+    snackImg,
+  } = watch();
+  // const watchDiff = watch();
   useEffect(() => {
-    updateInstance();
-  }, [watchDiff, updateInstance]);
+    setRecoilData(currentRHF);
+  }, [
+    createDate,
+    title,
+    desc,
+    morning,
+    lunch,
+    dinner,
+    snack,
+    nutrients,
+    sleepTimeStart,
+    sleepTimeEnd,
+    exercise,
+    review,
+    morningImg,
+    lunchImg,
+    dinnerImg,
+    snackImg,
+    // setRecoilData,
+    // currentRHF,
+  ]);
 
   const PdfRealTimeRender = (
     <Stack
@@ -321,7 +281,11 @@ export default function HealthDiary() {
                         />
                       )}
                     />
-                    <ImgFuncs name='morningImg' currentRHF={currentRHF} />
+                    <ImgFuncs
+                      name='morningImg'
+                      currentRHF={currentRHF}
+                      resetField={resetField}
+                    />
                   </label>
                   {/* <input type='file' {...register('morningImg.buffer')} /> */}
                   <Controller
@@ -353,7 +317,11 @@ export default function HealthDiary() {
                         />
                       )}
                     />
-                    <ImgFuncs name='lunchImg' currentRHF={currentRHF} />
+                    <ImgFuncs
+                      name='lunchImg'
+                      currentRHF={currentRHF}
+                      resetField={resetField}
+                    />
                   </label>
                   <Controller
                     name='lunch'
@@ -384,7 +352,11 @@ export default function HealthDiary() {
                         />
                       )}
                     />
-                    <ImgFuncs currentRHF={currentRHF} name='dinnerImg' />
+                    <ImgFuncs
+                      currentRHF={currentRHF}
+                      name='dinnerImg'
+                      resetField={resetField}
+                    />
                   </label>
                   <Controller
                     name='dinner'
@@ -415,7 +387,11 @@ export default function HealthDiary() {
                         />
                       )}
                     />
-                    <ImgFuncs currentRHF={currentRHF} name='snackImg' />
+                    <ImgFuncs
+                      currentRHF={currentRHF}
+                      name='snackImg'
+                      resetField={resetField}
+                    />
                   </label>
                   <Controller
                     name='snack'
@@ -529,13 +505,7 @@ export default function HealthDiary() {
           </Box>
           {/* <PdfRealTimeRender /> */}
           <div className='col-sm-4 col-md-6'>
-            {!isLoading && (
-              <PdfViewer
-                instance={instance}
-                updateInstance={updateInstance}
-                getValues={getValues}
-              />
-            )}
+            <Preview />
           </div>
           <Flex fullWidth mb={120} />
         </div>

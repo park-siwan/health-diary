@@ -50,7 +50,7 @@ export default function PrintDocs({
     return (
       // <div className={`${stateAni.animation}`} style={stateAni}>
       <div
-        className='fadeIn'
+        // className='fadeIn'
         css={css`
           box-shadow: 0 0 8px rgb(235 215 215);
         `}
