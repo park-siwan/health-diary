@@ -14,7 +14,7 @@ import ko from 'date-fns/locale/ko';
 import { Box } from '@mui/system';
 import Stack from '@mui/material/Stack';
 import { useRecoilState } from 'recoil';
-import { diaryData, diaryDefaultValue, fontLoading } from './store';
+import { diaryData, diaryDefaultValue } from './store';
 import { ImgFile, ImgFileList, Inputs } from './type';
 import { Font, PDFDownloadLink, usePDF } from '@react-pdf/renderer';
 import PdfRenderer from './pdf/PdfRenderer';
@@ -169,7 +169,18 @@ export default function HealthDiary() {
       </ButtonGroup>
     </Stack>
   );
-
+  const outerWidth = useRef<HTMLDivElement>(null);
+  let a4Height;
+  if (outerWidth.current !== null) {
+    a4Height = outerWidth.current.offsetWidth * 1.414;
+  }
+  const previewContainer = css`
+    display: flex;
+    /* flex-shrink: 0; */
+    position: sticky;
+    top: 70px;
+    height: ${a4Height}px;
+  `;
   return (
     <div className={cx('healthDiary')}>
       <Flex mt={50}></Flex>
@@ -505,11 +516,9 @@ export default function HealthDiary() {
           </Box>
           {/* <PdfRealTimeRender /> */}
           <div
-            className='col-sm-4 col-md-6'
-            css={css`
-              display: flex;
-              flex-shrink: 0;
-            `}
+            className='col-sm-4 col-md-6 lg-only'
+            ref={outerWidth}
+            css={previewContainer}
           >
             <Preview />
           </div>

@@ -6,10 +6,10 @@ import { useRecoilValue } from 'recoil';
 import { gray, primary, S, foodTitle, food } from '../pdf/style';
 import { diaryData } from '../store';
 import heartIcon from '../pdf//heartIcon.png';
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 export default function Preview() {
-  const outerWidth = useRef<HTMLDivElement>(null);
-  // console.log(outerWidth);
-
+  // const outerWidth = useRef<HTMLDivElement>(null);
   const recoilValue = useRecoilValue(diaryData);
 
   const {
@@ -55,18 +55,18 @@ export default function Preview() {
     sleepMin = sleepTotal % 60;
     sleepHour = Math.floor(sleepTotal / 60);
   }
-  let a4Height;
-  if (outerWidth.current !== null) {
-    a4Height = outerWidth.current.offsetWidth * 1.414;
-  }
+  // let a4Height;
+  // if (outerWidth.current !== null) {
+  //   a4Height = outerWidth.current.offsetWidth * 1.414;
+  // }
   // console.log(recoilValue);
   const BoxSize = 136;
   const foodBoxSize = { width: BoxSize, height: BoxSize };
 
   // console.log(a4Height);
   return (
-    <div>
-      <div ref={outerWidth} style={{ ...S.font, ...S.outer, height: a4Height }}>
+    <>
+      <div style={{ ...S.font, ...S.outer }}>
         <div style={{ ...S.header }}>
           {/* 순번 */}
           <h1 style={{ ...S.headerText, color: primary[500] }}>
@@ -78,6 +78,7 @@ export default function Preview() {
           <div
             style={{
               flexDirection: 'row',
+              display: 'flex',
             }}
           >
             <h3
@@ -94,7 +95,7 @@ export default function Preview() {
             </span>
           </div>
         </div>
-        <div style={{ ...S.inner, height: '85%' }}>
+        <div style={{ ...S.inner, height: '86%' }}>
           <div style={{ flexDirection: 'row', display: 'flex' }}>
             <div style={S.foods}>
               <div style={{ ...food, ...foodBoxSize }}>
@@ -207,6 +208,6 @@ export default function Preview() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
