@@ -1,6 +1,7 @@
 // import source1 from '../../../styles/fonts/SpoqaHanSansNeo-Regular.ttf';
 import { grey } from '@mui/material/colors';
 import ReactPDF, { Font, StyleSheet } from '@react-pdf/renderer';
+import Flex from '../../../components/atoms/Flex';
 
 export const primary = {
   100: '#FAE5E6', //배경
@@ -15,9 +16,10 @@ export const gray = {
 };
 export const FOOD_BOX_SIZE = 139;
 
-const food: any = {
+export const food: any = {
   display: 'flex',
-  // justifyContent: 'flex-start',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
   alignItems: 'flex-start',
   width: FOOD_BOX_SIZE,
   height: FOOD_BOX_SIZE,
@@ -25,21 +27,21 @@ const food: any = {
   borderBottom: `1px solid ${gray[100]}`,
   padding: 10,
 };
-const foodTitle: any = {
-  // color: primary[600],
+export const foodTitle: any = {
+  color: primary[600],
   fontWeight: 700,
   fontSize: 16,
   marginLeft: 10,
   marginTop: 10,
   marginBottom: 5,
 };
-const foodDesc: any = {
+export const foodDesc: any = {
   display: 'flex',
   color: gray[500],
   fontSize: 14,
   marginLeft: 10,
 };
-const foodTextBack: any = {
+export const foodTextBack: any = {
   position: 'absolute',
   top: '69.5px',
   justifyContent: 'flex-end',
@@ -50,7 +52,7 @@ const foodTextBack: any = {
   width: FOOD_BOX_SIZE,
   minHeight: FOOD_BOX_SIZE / 2,
 };
-const fontFamily = 'Spoqa';
+export const fontFamily = 'NotoSans';
 export const S = StyleSheet.create({
   //<Page> 에 S.font 로 전역적용한 폰트
   font: {
@@ -75,9 +77,10 @@ export const S = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 32,
+    paddingTop: 32,
     paddingBottom: 10,
-    paddingHorizontal: 40,
+    paddingLeft: 40,
+    paddingRight: 40,
   },
   headerText: {
     fontSize: '14px',
@@ -140,12 +143,14 @@ export const S = StyleSheet.create({
   },
 
   bottomBox: {
+    display: 'flex',
     fontSize: '12px',
     borderTop: `1px solid ${gray[100]}`,
+    alignItems: 'center',
     width: '100%',
     flexDirection: 'row',
-    paddingTop: 14,
-    paddingBottom: 14,
+    paddingTop: 10,
+    paddingBottom: 10,
     paddingLeft: 20,
     paddingRight: 20,
   },

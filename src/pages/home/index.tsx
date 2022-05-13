@@ -504,7 +504,13 @@ export default function HealthDiary() {
             {PdfRealTimeRender}
           </Box>
           {/* <PdfRealTimeRender /> */}
-          <div className='col-sm-4 col-md-6'>
+          <div
+            className='col-sm-4 col-md-6'
+            css={css`
+              display: flex;
+              flex-shrink: 0;
+            `}
+          >
             <Preview />
           </div>
           <Flex fullWidth mb={120} />

@@ -40,16 +40,16 @@
 * {
   box-sizing: border-box;
   margin: 0;
-  font-family: "Roboto", sans-serif;
+  font-family: "NotoSans", sans-serif;
   --moz-osx-font-smoothing: grayscale;
   --webkit-font-smoothing: antialiased; }
 
 html {
-  font-family: "Roboto", sans-serif;
+  font-family: "NotoSans", sans-serif;
   font-size: 16px; }
 
 body {
-  font-family: "Roboto", sans-serif;
+  font-family: "NotoSans", sans-serif;
   color: #3f4150; }
 
 h1 {

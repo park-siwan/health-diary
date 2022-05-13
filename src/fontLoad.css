@@ -4,7 +4,7 @@
 @import url('./styles/fonts/SpoqaHanSansNeo-Medium.ttf');
 @import url('./styles/fonts/SpoqaHanSansNeo-Regular.ttf'); */
 
-@font-face {
+/* @font-face {
   font-family: 'Spoqa Han Sans Neo';
   font-weight: 700;
   src: local('Spoqa Han Sans Neo Bold'),
@@ -22,4 +22,4 @@
   font-weight: 400;
   src: local('Spoqa Han Sans Neo Regular'),
     url('./styles/fonts/SpoqaHanSansNeo-Regular.ttf') format('truetype');
-}
+} */

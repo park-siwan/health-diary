@@ -26,13 +26,13 @@ import { S, primary, gray, FOOD_BOX_SIZE } from './style';
 import heartIcon from './heartIcon.png';
 import { format, differenceInMinutes, isValid } from 'date-fns';
 import transparent from './transparent.png';
-import source1 from '../../../styles/fonts/SpoqaHanSansNeo-Regular.ttf';
-import source2 from '../../../styles/fonts/SpoqaHanSansNeo-Medium.ttf';
-import source3 from '../../../styles/fonts/SpoqaHanSansNeo-Bold.ttf';
+import source1 from '../../../styles/fonts/NotoSansCJKkr-Light.ttf';
+import source2 from '../../../styles/fonts/NotoSansCJKkr-Regular.ttf';
+import source3 from '../../../styles/fonts/NotoSansCJKkr-Bold.ttf';
 import testImg from './testImg.jpg';
 
 Font.register({
-  family: 'Spoqa',
+  family: 'NotoSans',
   fonts: [
     {
       src: source1,
