@@ -13,8 +13,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import ko from 'date-fns/locale/ko';
 import { Box } from '@mui/system';
 import Stack from '@mui/material/Stack';
-import { useRecoilState } from 'recoil';
-import { diaryData, diaryDefaultValue } from './store';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { diaryData, diaryDefaultValue, gnb } from './store';
 import { ImgFile, ImgFileList, Inputs } from './type';
 import { Font, PDFDownloadLink, usePDF } from '@react-pdf/renderer';
 import PdfRenderer from './pdf/PdfRenderer';
@@ -45,6 +45,7 @@ import Preview from './Preview';
 const cx = classNames.bind(healthDiaryStyle);
 
 export default function HealthDiary() {
+  const gnbState = useRecoilValue(gnb);
   const [recoilData, setRecoilData] = useRecoilState(diaryData);
   const {
     control,
@@ -170,7 +171,7 @@ export default function HealthDiary() {
     </Stack>
   );
   const outerWidth = useRef<HTMLDivElement>(null);
-  let a4Height;
+  let a4Height = 805.97;
   if (outerWidth.current !== null) {
     a4Height = outerWidth.current.offsetWidth * 1.414;
   }
@@ -515,13 +516,17 @@ export default function HealthDiary() {
             {PdfRealTimeRender}
           </Box>
           {/* <PdfRealTimeRender /> */}
-          <div
-            className='col-sm-4 col-md-6 lg-only'
-            ref={outerWidth}
-            css={previewContainer}
-          >
-            <Preview />
-          </div>
+
+          {gnbState.preview && (
+            <div
+              className={`col-sm-4 col-md-6 lg-only`}
+              ref={outerWidth}
+              css={previewContainer}
+            >
+              <Preview />
+            </div>
+          )}
+
           <Flex fullWidth mb={120} />
         </div>
       </div>

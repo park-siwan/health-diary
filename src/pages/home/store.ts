@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 // , selector, useRecoilState, useRecoilValue
-import { date, ImgFile, Inputs } from './type';
+import { date, GnbType, ImgFile, Inputs } from './type';
 // import add from "date-fns/add";
 import { add, set } from 'date-fns';
 const today: Date = new Date();
@@ -38,9 +38,10 @@ export const diaryData = atom<Inputs>({
   key: 'diaryData',
   default: diaryDefaultValue,
 });
-export const fontLoading = atom({
-  key: 'fontLoading',
-  default: false,
+export const gnbStateDefaultVal: GnbType = { list: false, preview: false };
+export const gnb = atom<GnbType>({
+  key: 'gnb',
+  default: gnbStateDefaultVal,
 });
 // const diaryDataSelector = selector({
 //   key: 'diaryDataSelector',

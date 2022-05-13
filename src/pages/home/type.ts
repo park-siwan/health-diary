@@ -34,3 +34,9 @@ export interface Inputs {
   dinnerImg: ImgFile;
   snackImg: ImgFile;
 }
+
+export interface GnbType {
+  [x: string]: boolean;
+  list: boolean;
+  preview: boolean;
+}
