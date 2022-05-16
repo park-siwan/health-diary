@@ -95,7 +95,7 @@ export default function Preview() {
             </span>
           </div>
         </div>
-        <div style={{ ...S.inner, height: '86%' }}>
+        <div style={{ ...S.inner, height: '85.2%' }}>
           <div style={{ flexDirection: 'row', display: 'flex' }}>
             <div style={S.foods}>
               <div style={{ ...food, ...foodBoxSize }}>
