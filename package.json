@@ -70,7 +70,6 @@
     "@types/react-pdf": "^5.7.1",
     "@types/react-router": "^5.1.18",
     "@types/react-router-dom": "^5.3.3",
-    "nodemon": "^2.0.16",
     "stylelint": "^14.7.1",
     "stylelint-config-recess-order": "^3.0.0",
     "stylelint-config-standard": "^25.0.0",
